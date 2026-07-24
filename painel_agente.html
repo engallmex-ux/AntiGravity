@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Agente de Inspeções - OrbisTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #6366f1;
+            --accent-hover: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1.5rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-info {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions {
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .instructions strong {
+            color: #a5b4fc;
+        }
+
+        /* Estilo de Dropzone para carregar CSV */
+        .upload-zone {
+            border: 2px dashed rgba(99, 102, 241, 0.4);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(99, 102, 241, 0.03);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .upload-zone p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .upload-zone span {
+            font-size: 0.85rem;
+            color: #818cf8;
+            text-decoration: underline;
+        }
+
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-action:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .btn-export {
+            background: var(--success);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-export:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .filter-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 2px solid var(--card-border);
+            font-size: 0.875rem;
+        }
+
+        td {
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .btn-fill {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-fill:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fcd34d;
+        }
+
+        .status-done {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+
+        .log-section {
+            margin-top: 1rem;
+        }
+
+        .log-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .log-item {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>Painel do Agente OrbisTracker</h1>
+                <p style="color: var(--text-secondary); margin-top: 0.25rem;">Preenchimento de Formulários Corporativos HU-UFSCAR</p>
+            </div>
+            <div class="badge-info">Plataforma Segura e Sem Bloqueios</div>
+        </header>
+
+        <section class="card instructions">
+            <p>💡 <strong>Como funciona a integração com o Google Sheets:</strong> Baixe a planilha do Sheets em <strong>Arquivo > Fazer download > Valores separados por vírgula (.csv)</strong>, depois arraste para a caixa abaixo. Você pode remover linhas indesejadas, ocultar os itens concluídos e exportar o progresso atual de volta para o Excel a qualquer momento!</p>
+        </section>
+
+        <!-- Zona de Configurações Globais -->
+        <section class="card" style="display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <label for="default-sector-select" style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 600;">🔒 Setor Travado para o Preenchimento:</label>
+                <select id="default-sector-select" onchange="addLog('Setor padrao alterado.'); renderTable();" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; outline: none; font-size: 0.9rem;">
+                    <option value="">-- Usar o setor da planilha --</option>
+                </select>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                *Se selecionado, este setor será preenchido para <strong>todos</strong> os equipamentos.
+            </div>
+        </section>
+
+        <!-- Zona de Upload de CSV -->
+        <section class="card">
+            <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <p>Arraste e solte o arquivo <strong>.csv</strong> exportado do Sheets aqui</p>
+                <span>ou clique para procurar no seu computador</span>
+                <input type="file" id="file-input" accept=".csv" style="display: none;" onchange="handleFileSelect(event)">
+            </div>
+        </section>
+
+        <section class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h2>Fila de Registros para Processamento</h2>
+                <div class="controls-row">
+                    <label class="filter-toggle">
+                        <input type="checkbox" id="hide-done-checkbox" onchange="toggleHideDone()"> Ocultar Processados
+                    </label>
+                    <button class="btn-export" onclick="exportProgress()">
+                        📥 Exportar Progresso (CSV)
+                    </button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ativo (Código)</th>
+                        <th>Equipamento</th>
+                        <th>Setor</th>
+                        <th>Condição</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="rows-container">
+                    <!-- Gerado dinamicamente -->
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card log-section">
+            <h2>Log de Auditoria em Tempo Real</h2>
+            <ul class="log-list" id="log-container">
+                <!-- Logs do LocalStorage -->
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfW7GSzOU-Ed9v4PzqJ1pTCG2wahh4pmNIb1rTdaksZqL8qGA/viewform";
+
+        const sectorOptions = ["ambulatório de especialidades", "CME", "Setor de Abastecimento Farmacêutico e Suprimentos", "unidade da criança e adolescentes", "unidade de bloco cirúrgico", "unidade de clinica cirúrgica", "unidade de clinica médica", "unidade de diagnóstico por imagens e diagnósticos especializados (radiologia, endoscopia)", "unidade de farmácia clínica e dispensação farmacêutica", "unidade de laboratório de análises clínicas e anatomia patológica", "unidade de nefrologia", "unidade de pesquisa clínica", "Unidade de saúde mental", "Unidade de Saúde Ocupacional e Segurança do Trabalho", "unidade de urgência e emergência", "UTI adulto", "UTI pediátrica", "PA ADULTO (SALA AMARELA)", "FARMÁCIA SATÉLITE UTI/PA ADULTO"];
+        const equipOptions = ["AGITADOR AQUECEDOR", "AGITADOR VORTEX", "ANALISADOR FISIOLOGICO MOBILIDADE PERISTALTICA ESOFAGICA", "ANALISADOR LAB BIOQUIMICO", "ANALISADOR LAB GAS SANGUINEO-PH-ELETROLITO", "ANALISADOR LAB HEM COAGULACAO", "ANALISADOR LAB HEM CTG CELULA MANUAL", "ANALISADOR LAB HEM GRUPO SANGUINEO AUTOMATICO", "ANALISADOR LAB IMUNOENSAIO FLUORIMETRICO", "ANALISADOR LAB URINA AUTOMATICO", "ANALISADOR METABOLICO O2 / CO2", "APARELHO DE ANESTESIA", "APLICADOR CRIOCAUTERIO", "AQUECEDOR CONTRASTE", "AQUECEDOR PACIENTE AR FORCADO", "ARCO CIRURGICO MOVEL", "ARMARIO ORGANIZADOR AUDIO VIDEO", "ASPIRADOR BAIXO VOLUME", "ASPIRADOR CIRURGICO", "AUTOCLAVE BANCADA", "AUTOCLAVE HORIZONTAL", "BALANCA ELETRONICA", "BALANCA ELETRONICA PRECISAO", "BALANCA INFANTIL ELETRONICA", "BALANCA PLATAFORMA ELETRONICA", "BANHO FLUTUACAO TECIDO", "BANHO MARIA LABORATORIAL", "BERCO AQUECIDO", "BILIRRUBINOMETRO CUTANEO", "BIOMETRO ULTRASSONICO", "BISTURI DE ARGONIO", "BISTURI ELETRONICO", "BLENDER", "BOMBA INFUSAO SERINGA", "BOMBA INFUSAO USO GERAL", "BRONCOSCOPIO", "CABINE SEGURANCA BIOLOGICA CL II A-2", "CAMA ELETRICA", "CAMPIMETRO", "CARDIOTOCOGRAFO", "CARDIOVERSOR", "CENTRIFUGA", "CENTRIFUGA CITOLOGICA", "CENTRIFUGA REFRIGERADA", "CISTOSCOPIO", "COLPOSCOPIO", "COLUNA OFTALMOLOGICA", "CORADOR LAMINA", "DERMATOMO ELETRICO", "DERMATOSCOPIO", "DESFIBRILADOR", "DETECTOR FETAL US CORACAO", "DIGITALIZADOR/GRAVADOR VIDEO", "DINAMOMETRO EMPUNHADURA MANOMETRO", "DUODENOSCOPIO", "ELETROCARDIOGRAFO", "ELEVADOR DE PACIENTE", "ESFIGMOMANOMETRO ANEROIDE", "ESPIROMETRO DIAGNOSTICO", "ESTEIRA ERGOMETRICA", "ESTERELIZADOR DE PLASMA", "ESTIMULADOR ELETRICO N P ANALGESIA TRANSCUTANEO", "ESTUFA ESTERILIZACAO", "FACOEMULSIFICADOR", "FOCO CIRURGICO", "FOCO CLINICO", "FONTE ENERGIA REGULADA ELETROFORESE", "FONTE LUZ", "FOTOTACOMETRO", "FREEZER LAB MULTIUSO", "GLICOSIMETRO", "GRAVADOR ELETRONICO", "HOMOGENEIZADOR", "INCUBADORA", "INCUBADORA LABORATORIAL", "INJETOR MEIO CONTRASTE", "INSUFLADOR BAINHA TUBO TRAQUEAL", "INSUFLADOR LAPAROSCOPIA", "LAMPADA FENDA", "LASER DIODO BIOESTIMULACAO", "LAVADORA DESCONTAMINADORA", "LAVADORA ULTRASSÔNICA", "LENSOMETRO", "LITOTRIPTOR INTRACORPOREO", "LUPA", "MACA TRANSFERENCIA PACIENTE", "MAMOGRAFO", "MARCA-PASSO CARDIACO-ELETRODO INVASIVO", "MEDIDOR PH", "MEDIDOR PRESSAO VIAS AEREAS", "MEDIDOR PRESSAO/TEMPERATURA/UMIDADE", "MESA CIRURGICA", "MESA EXAME-TRATAMENTO", "MICROSCOPIO CIRURGICO", "MICROSCOPIO LABORATORIAL", "MICROTOMO ROTATIVO", "MOD MULTIPARAMETRICO", "MONITOR ELETROENCEFALOGRAMA", "MONITOR MULTIPARAMETRICO", "MONITOR VIDEO", "NASOFARINGOSCOPIO", "NEGATOSCOPIO", "NOBREAK", "OFTALMOSCOPIO", "OFTALMOSCOPIO INDIRETO", "OSMOSE REVERSA", "OTOSCOPIO", "OXIMETRO PULSO", "PAQUIMETRO", "PERFURADOR", "PIPETA", "PISTOLA AR/AGUA PRESSURIZADO", "PROCESSADORA IMAGEM VIDEO", "PROJETOR GRAFICO OCULAR", "RADIOMETRO FOTOTERAPIA", "RAIO-X", "RAIO-X MOVEL", "REAL TIME PCR", "REFLETOR", "REFRATOMETRO LAB URINA", "REFRATOR OFTALMOLOGICO", "REFRATOR OFTALMOLOGICO AUTOMATICO", "REFRIGERADOR ALIMENTO VERTICAL", "REFRIGERADOR BANCO SANGUE", "REFRIGERADOR FARMACIA VERTICAL", "REFRIGERADOR LABORATORIAL", "REPROCESSADORA ENDOSCOPIO FLEXIVEL", "SECADOR CIRCUITO RESPIRATORIO EXTERNO", "SELADOR PACOTE", "SELADOR TUBO TERMOPLASTICO CONEXAO ESTERIL", "SENSOR CO2 EXALADO", "SERRA GESSO ELETRICA", "SISTEMA DIGITALIZACAO IMAGEM RADIOGRAFIA", "SISTEMA MONITORACAO ESFORCO CARDIACO", "SISTEMA PURIFICADOR AGUA", "SISTEMA RADIOGRAFICO-FLUOROSCOPICO", "TERMODESINFECTORA", "TERMOMETRO ELETRONICO", "TESTE VAZAMENTO ENDOSCOPIO", "TOMOGRAFO COMPUTADORIZADO", "TRANSDUTOR ULTRASSOM", "ULTRASSOM", "UMIDIFICADOR AQUECEDOR", "UNIDADE DE HEMODIALISE", "UNITARIZADOR MEDICAMENTO PROGRAMAVEL", "VAPORIZADOR UNI ANESTESIA", "VENTILADOR BIPAP/CPAP", "VENTILADOR PULMONAR", "VENTILADOR TRANSPORTE", "VENTILOMETRO", "VIDEO BRONCOSCOPIO", "VIDEO COLONOSCOPIO", "VIDEO COLPOSCOPIO", "VIDEO GASTROSCOPIO", "VIDEO LARINGOSCOPIO", "WORKSTATION", "YAG LASER", "MÁQUINA DE HEMODIÁLISE", "CLICADORA DE DIÁLISE PERITONIAL", "Opção 160"];
+        const marcaOptions = ["ACCUTOME", "AGFA", "AKSO", "ALACER", "ALFAMED", "ANCO", "APRAMED", "ARGUS", "ASP", "ASPIRAMAX", "ASPIRAVIDA", "ATEMOH", "ATHLETIC", "BALMAK", "BARCO", "BARRFAB", "BASELINE", "BAUMER", "BBRAUN", "BIOMETRICA", "BIONET", "BIONOVA", "BIOPAR", "BIOSENSOR", "BIOTRONIK", "BMC", "BRASIL CALIBRACOES", "CARDIOS", "CARL ZEISS", "CEPHEID", "CMOS DRAKE", "COLDLAB", "COMEN", "CONFIANCE MEDICAL", "CONTEC", "COVIDIEN", "CREATIVE MEDICAL", "DAIKI", "DOCTOR DEVICES", "DRAGER", "DUAN", "EDAN", "ELBER", "ELECTROLUX", "ENDOCLEAR", "ENGEMED", "EPPENDORF", "ESCO", "EYETEC", "FANEM", "FILIZOLA", "FORCA MEDICA", "FREEDOM", "FRESENIUS KABI", "FULL GAUGE", "GE HEALTHCARE", "GENERAL MEDITECH", "GG EQUIPAMENTOS", "GIGANTE", "GLOBALFILTROS", "GLOBALTEC", "HANGZHOU TONGCHI", "HAWO", "HIDROTEK", "HOFFMANNLAB", "HUVITZ", "IBRAMED", "ICEL", "ICELERA", "INALAMED", "INBRAS", "INCOTERM", "INDREL", "INPROMED", "INSIGHTERS", "INSTRAMED", "INSTRUTHERM", "INTERMED", "JUMPER", "KACIL", "KARL STORZ", "KEELER", "KLARE", "KORR", "KSS", "LABNEWS", "LANCO", "LENOVO", "LG", "LIDER", "LINET", "LJUNGBERG & KÖGEL", "LOKTAL", "LUCADEMA", "LUPETEC", "MACHIDA", "MACOM", "MAGNAMED", "MALLINCKRODT", "MAQUET", "MARTE", "MAXXIMED", "MD", "MED LIGHT", "MEDCAPTAIN", "MEDCIR", "MEDPEJ", "MEGABRIX", "MICROEM", "MILLIPORE", "MINDRAY", "MTX", "NDS", "NEOS", "NEUROVIRTUAL", "NEVONI", "NEW VISION", "NEWMED", "NHS", "NIHON KOHDEN", "NIKON", "NIPRO", "NITROSPRAY", "NOVA INSTRUMENTS", "NSPIRE", "OLIDEF", "OLYMPUS", "OMNIMED", "OPUSPAC", "OQTIS", "ORTHO", "ORTOSINTESE", "PANASONIC", "PENTAX", "PHILIPS", "PHILIPS-RESPIRONICS", "PHILIPS-VMI", "PHOENIX LUFERCO", "PRESYS", "PROLIFE", "PRONK TECHNOLOGIES", "PROTEC", "R&D MEDIQ", "RAININ", "RAMUZA", "RC MOVEIS", "ROCHE", "SAMSUNG MEDISON", "SAMTRONIC", "SCICAN", "SD BIOSENSOR", "SHIMADZU", "SIEMENS", "SMITHS MEDICAL", "SOLIDSTEEL", "SONY", "SPL ELEKTRONIK", "STEELCO", "STERIS", "STRA MEDICAL", "STRYKER", "SUNTECH MEDICAL", "SYSMEX", "TEB", "TECME", "TECNOPON", "TEKMARKET", "THERMO SCIENTIFIC", "TOLEDO", "TOTH", "TREND MEDICAL", "TUTTNAUER", "UNITEC", "UNITY", "VBM", "VEXER", "VMI", "WELCH ALLYN", "WELMY", "WEM", "WENZHOU KANGJU", "XENONIO", "BAXTER", "Opção 184", "SOLIDOR"];
+        const modeloOptions = ["12 0241", "13242-XL", "1502", "18018-A", "2085", "22840", "22-MP-58-VQ", "25-CUFF", "316118", "347-CV", "347-CVV", "350 ML", "3870-ELV", "4008-S V-10", "4-SIGHT", "5005", "54 04 000", "54 07 000-C", "5702", "7500-SV-2", "8", "9094 4", "A-45-PLUS", "A-7", "AB-2 4-S-3", "AB-42", "AC-178", "ACCU CHECK GUIDE", "ACCULAN-3-TI", "ACCULAN-4", "ACUSON X-300", "AD-2", "AD-3300", "ADVIA-560", "AFFINITI-50", "AFFINITI-70", "AIR O2-BLENDER", "AK-28", "AL-4-ZPH", "ALB-480-PLUS", "ALB-800-S", "ALPHACLASSIC PRO-1118", "ALX-1012-S", "ALX-1012-S COMPAC", "APEX-1000", "APEX-200", "AQUILA-320-D", "AQUILLA PLUS", "ARGON-4", "ATLAN A-300", "AVL-06", "AXIOM ICONOS R-100", "AXIOSKOPE A-1", "B-160", "B-520", "B-650", "BABY", "BABY ELETRONICA", "BENEHEART D-30", "BF-683", "BH-2015", "BIOSEALER CR-6", "BIOSIM", "BIOSIN", "BK-200-F", "BM-147", "BMA-02", "BO-8000", "BP-100-HLX", "BR-101 100", "BR-20-D", "BRILLIANCE-16", "BSG-04", "BSM-3763", "BSM-6701", "BT-300", "BW II EEG", "C-10 3-V", "C-12", "C-120", "C-5 1", "C-6 2", "C-9 4-V", "CA-660", "CALCULITUS", "CARDIO SEVEN", "CARDIO-7", "CARDIOCARE-2000", "CARDIOLIFE TEC-5621", "CARDIOLIFE TEC-5631", "CARESTATION-620", "CCS-01", "CDR-16000", "CE-9000-X", "CENTRAL", "CH-4001", "CH-5 2", "CINEMED-27-F", "CL-120 40-V", "CL-374 80-V", "CL-500 40-V", "CLASSE M1", "CLASSIC PR-1000", "CLINITEK ADVANTUS", "CM LED", "CM RECMASTER-3", "CM SCAM", "CM-1200-B", "CM-40 L", "COLIBRI DPM-60", "CPA AAD-03", "CPS-10-D", "CR AMOS", "CRUS", "CSV-120", "CSV-340", "CSV-420", "CSV-510", "CX-43-RF", "CYF-5", "DERMA 20", "DIALOG +", "DIAMAX", "DRY-5300", "DRYSTAR-5302", "DRYSTAR-5503", "DTC-16000", "DUALMAX", "DX M", "EA-100", "EASYCLEAN", "EB-1570-K", "EB-19-J-10", "EBW", "EC-105", "EC-3490-LK", "EC-380-LKP", "EC-9 4", "ECB-1", "ECLIPSE E-200", "ED-3490-TK", "EFFICIA CM-10", "EG-1690-K", "EG-290-KP", "EG-3890-TK", "EL-18 4", "ELEGANCE-1", "ELEGANZA SMART", "ELEGANZA-1", "ELEGANZA-4", "ELP-25-BB", "ENDOVUE-21", "ENT-30-P III", "EPK I", "EPOC", "ERK-9100", "ES-03", "EVOLUTION-10000", "EXCELSA II 206-BL", "EXTREME-1060-T", "EZEA", "F-0102 500700", "FA APOLLO 3 X 4 LED", "FC-400", "FM-0748", "FM-6451", "FM-6454", "FT-10", "G-1-B", "G-3-B-30-VT", "GENEXPERT", "GIGAPUMP G-77", "GRAPHNET TS+", "GS-600", "GT-5000", "GT-5000-PLUS", "HANDYSAT TC", "HCL C", "HEMATEK-3000", "HERATHERM IGS-100", "HF-400", "HI VAC-2", "HM-01", "HM-850-DC V", "HS-40", "HT-215", "HT-700", "IBLUE-64", "IC-10/20-FR", "ICATU S-3-ED", "ICATU S-4.0", "ICATU S-4.0-ENTERAL", "ICATU S-4.0-INTELLI WIFI", "ICATU-4.0-INTELLI PCA", "IH-6.0", "IMEC-12", "INP 3×3 F-MASTER", "INTER-5-PLUS", "IS-3-L", "IV PLUS", "JAU-130", "JM-105", "JPD-100-B", "JT-950-P", "KL-35", "KOKO SX-1000", "L-12 3", "L-12 4", "L-15 7-IO", "LASERPULSE", "LD-1050", "LD-230-BABY", "LEVEL-1", "LP VORTEX MIXER", "LUCA-153/22", "LUCA-82/100", "LUMMINA PRO-8", "MA-520 60", "MD-500", "MDFU-5312-PA", "MDSC-2226", "MEDIVATORS ISA", "METACHECK", "MILLI Q", "MISTY-3", "MOBILEDART EVOLUTION MX-8", "MOBILEDART EVOLUTION MX-8-V", "MRM-600-C", "MRP-2015", "MS-100", "MU-671-RK", "MULTIPLEX-12-C", "MULTIPLEX-24-C", "MULTISYSTEM-2051", "MULTIX B", "NAVI-60", "NEURODYN", "NEURODYN HIGH VOLT", "NI-1225", "NI-1760/120", "NI-1760/500", "NV-3000", "NX MIXED", "OBI LED", "OEC FLUOROSTAR-7900", "OIF BC-66-P", "OMNI-3000", "OMNI-610", "OPMI LUMERA I", "OPTIVANTAGE DH", "OPUS-30-X", "OSCAR-2 24-HR ABP", "OTOSCOPIO OMNI-3000", "OXYMAG", "P-180-M", "P-200-C", "P-200-M", "P-300-C", "P-8 4", "PA-210", "PE-2000", "PE-7000-Z", "PENTA III 01", "PLUS TRANSFER", "PM-60", "POWER CUT-300", "PREMIUM PDV SENOIDAL-2000 VA", "PREMIUM SENOIDAL G II 2200 VA", "PROSONIC JET-6510", "R-130", "RAPID POINT-500-E", "RB-9015 I", "RC-324", "RC-325", "RC-430-D", "REOCOR D", "RHC-200-ATC", "RI-109-E", "RITMUS-1200", "RITMUS-1200-A", "RO-20", "RT-3000", "RY-90000", "S-12 4", "S-4 2", "S-5 1", "S-8 3", "SC-3", "SE-300-B", "SEG-100", "SELECTA", "SENOGRAPHE ESSENTIAL", "SENSE-10", "SHA P-5", "SIRIUS-2", "SKYLED-160 + 160", "SMART CHECK", "SOLARIS", "SOP-100", "SP-20", "SS-501-S", "SS-501-SX", "SSBI-21 L", "SSD-10 L", "SSEI-85 L", "ST-7000", "ST-7000-S INTELLI", "ST-7000-S TCI", "ST-7000-TCI", "STANDARD F-200", "STAR-5000-C", "STATIM-5000-G4", "STERRAD-100-NX", "STYLE", "SV-300", "SVM-7160", "SYMPHONY-40-H", "T-25N-2-BP-06", "TD-812", "TDEC-100", "TEC-850", "TEE V-5-M", "TG-980-P", "TH-1500", "THOR MULTITESTER-3620", "THU-200", "TR EVOLUTION", "TRILOGY EVO", "TUBE REVOLVER", "TW E-2000 400-P", "TYCOS DS-44", "UP-25-MD", "V-530-S", "V-6 2", "V-60", "V-60-SEVO", "VALORY FLOOR", "VENTMETER-1901509", "VF-10 5", "VIRTO", "VISALIS-100", "VISULAS YAG III", "VITROS-250", "VOP-00100", "VS-2000-E", "VS-8", "WATO EX-65", "WAVEVAC", "WRIGHT MARK-8", "X-7 2-T", "Y-01-LAB UV", "EFSH013", "Opção 353", "5C4471", "Opção 355"];
+        const condOptions = ["Boa", "Regular (Equipamento danificado, mas em uso)", "Ruim (Equipamento Parado)"];
+
+        let dataRows = [{"ativo": "HU-TST-9999-ORB", "data_hora": "11/07/2026, 17:39:09", "equipamento": "Teste", "fabricante": "Teste", "modelo": "Teste", "num_serie": "Teste", "patrimonio": "Teste", "setor": "TESTE_SINC", "obs": "[Alerta de Sincronização de Drive] [TREINAMENTO / NÃO-MÉDICO] Teste", "condicao": "Boa", "val_prev": "11/07/2027", "val_cal": "11/07/2027", "val_tse": "11/07/2027"}, {"ativo": "SVI-002", "data_hora": "11/07/2026, 18:08:55", "equipamento": "Ventilador Pulmonar", "fabricante": "Tecme", "modelo": "GraphNet ts+", "num_serie": "19 04 4 018 1083A2V", "patrimonio": "501.492", "setor": "RAD - UDIDE-RAD", "obs": "[Alerta de Sincronização de Drive] Registro ANVISA: 80628940059. Detentor do registro: World Medica S.L. Peso: 27.25 kg. Tensão: 100-240V 50-60Hz. Etiqueta de Engenharia Clínica HU-UFSCar: UTIP0014.", "condicao": "Regular", "val_prev": "01/09/2025", "val_cal": "01/09/2025", "val_tse": "01/09/2025"}, {"ativo": "DTI-001", "data_hora": "11/07/2026, 18:29:06", "equipamento": "Impressora de Etiquetas", "fabricante": "Zebra", "modelo": "ZD220", "num_serie": "1977", "patrimonio": "", "setor": "", "obs": "[Alerta de Sincronização de Drive] [TREINAMENTO / NÃO-MÉDICO] Part Number: ZD22042-T0AG00EZ. Possui etiqueta de advertência sobre aterramento elétrico conforme norma NBR ABNT 5410.", "condicao": "Boa", "val_prev": "", "val_cal": "", "val_tse": ""}, {"ativo": "HU-TST-9999-ORB", "data_hora": "11/07/2026, 18:31:56", "equipamento": "Teste", "fabricante": "Teste", "modelo": "Teste", "num_serie": "Teste", "patrimonio": "Teste", "setor": "TESTE_SINC", "obs": "[Alerta de Sincronização de Drive] [TREINAMENTO / NÃO-MÉDICO] Teste", "condicao": "Boa", "val_prev": "11/07/2027", "val_cal": "11/07/2027", "val_tse": "11/07/2027"}, {"ativo": "TER-001", "data_hora": "11/07/2026, 18:45:15", "equipamento": "Lata de Energético", "fabricante": "TNT Energy Drink", "modelo": "Juice Mango Summer", "num_serie": "202102A11J", "patrimonio": "", "setor": "", "obs": "[Alerta de Sincronização de Drive] [TREINAMENTO / NÃO-MÉDICO] O objeto analisado não é um equipamento médico, mas sim uma lata de energético TNT Juice Mango Summer aberta e com avaria (amassada na borda superior).", "condicao": "Ruim", "val_prev": "", "val_cal": "", "val_tse": ""}];
+        let hideDone = false;
+
+        // Dicionário de mapeamento manual para termos que o string matching não pega
+        const manualMappings = {
+            "bomba de infusao": "BOMBA INFUSAO USO GERAL",
+            "bomba de infusão": "BOMBA INFUSAO USO GERAL",
+            "bomba de infusao de uso geral": "BOMBA INFUSAO USO GERAL",
+            "bomba de infusão de uso geral": "BOMBA INFUSAO USO GERAL",
+            "ventilador de uti": "VENTILADOR PULMONAR",
+            "ventilador bipap/cpap": "VENTILADOR BIPAP/CPAP",
+            "aspirador de baixo volume": "ASPIRADOR BAIXO VOLUME",
+            "maquina de osmose reversa": "OSMOSE REVERSA",
+            "máquina de osmose reversa": "OSMOSE REVERSA",
+            "cama de leito": "CAMA ELETRICA",
+            "cama / leito": "CAMA ELETRICA",
+            "balança de plataforma eletrônica": "BALANCA PLATAFORMA ELETRONICA",
+            "balanca de plataforma eletronica": "BALANCA PLATAFORMA ELETRONICA",
+            "balança infantil eletrônica": "BALANCA INFANTIL ELETRONICA",
+            "balanca infantil eletronica": "BALANCA INFANTIL ELETRONICA",
+            "maleta/estojo": "",
+            "maleta": "",
+            "estojo": ""
+        };
+
+        function normalizeString(str) {
+            if (!str) return "";
+            return str.normalize("NFD")
+                      .replace(/[̀-ͯ]/g, "") // Remove acentos
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]/g, " ")      // Substitui caracteres especiais por espaços
+                      .replace(/(de|da|do|para|em|uso|geral|maquina|baixo|volume|de uti|geral)/g, "") // Remove stop words
+                      .replace(/\s+/g, " ")            // Remove espaços extras
+                      .trim();
+        }
+
+        function formatFormDate(dateStr) {
+            if (!dateStr) return "";
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            }
+            return dateStr;
+        }
+
+        function getBestOption(options, value) {
+            if (!value) return "";
+            const valClean = value.trim().toLowerCase();
+            
+            // 1. Verificar mapeamento manual exato
+            if (manualMappings[valClean]) {
+                return manualMappings[valClean];
+            }
+            
+            // 2. Tentar encontrar substring direta no mapeamento manual
+            for (const key in manualMappings) {
+                if (valClean.includes(key) || key.includes(valClean)) {
+                    return manualMappings[key];
+                }
+            }
+
+            const valNorm = normalizeString(value);
+            if (!valNorm || valNorm === "teste") return "";
+
+            // 3. Correspondência exata após normalização
+            for (const opt of options) {
+                if (normalizeString(opt) === valNorm) return opt;
+            }
+
+            // 4. Substring após normalização
+            for (const opt of options) {
+                const optNorm = normalizeString(opt);
+                if (valNorm.includes(optNorm) || optNorm.includes(valNorm)) {
+                    return opt;
+                }
+            }
+
+            return "";
+        }
+
+        function generatePrefilledUrl(row) {
+            const params = new URLSearchParams();
+            
+            // Verificar Setor Travado no Painel
+            const defaultSector = document.getElementById("default-sector-select").value;
+            if (defaultSector) {
+                params.append("entry.74901864", defaultSector);
+            } else if (row.setor) {
+                const sectorOpt = getBestOption(sectorOptions, row.setor);
+                if (sectorOpt) params.append("entry.74901864", sectorOpt);
+            }
+            
+            if (row.equipamento) {
+                const equipOpt = getBestOption(equipOptions, row.equipamento);
+                if (equipOpt) {
+                    params.append("entry.1736638741", equipOpt);
+                } else {
+                    params.append("entry.1545190436", row.equipamento);
+                }
+            }
+            
+            if (row.fabricante) {
+                const marcaOpt = getBestOption(marcaOptions, row.fabricante);
+                if (marcaOpt) {
+                    params.append("entry.1178798650", marcaOpt);
+                } else {
+                    params.append("entry.529015948", row.fabricante);
+                }
+            }
+            
+            if (row.modelo) {
+                const modeloOpt = getBestOption(modeloOptions, row.modelo);
+                if (modeloOpt) params.append("entry.531544184", modeloOpt);
+            }
+            
+            if (row.num_serie) params.append("entry.336267491", row.num_serie);
+            if (row.patrimonio) params.append("entry.1025983419", row.patrimonio);
+            
+            if (row.condicao) {
+                const condOpt = getBestOption(condOptions, row.condicao);
+                if (condOpt) params.append("entry.656379151", condOpt);
+            }
+            
+            if (row.val_prev) params.append("entry.1846850756", formatFormDate(row.val_prev));
+            if (row.val_cal) params.append("entry.1517468380", formatFormDate(row.val_cal));
+            if (row.val_tse) params.append("entry.523213862", formatFormDate(row.val_tse));
+            
+            if (row.obs) params.append("entry.760077387", row.obs);
+            
+            return `${formBaseUrl}?${params.toString()}`;
+        }
+
+        function addLog(text) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString();
+            const dateStr = now.toLocaleDateString();
+            const logMsg = `[${dateStr} ${timeStr}] - ${text}`;
+            
+            let logs = JSON.parse(localStorage.getItem("orbis_logs") || "[]");
+            logs.unshift(logMsg);
+            if (logs.length > 50) logs = logs.slice(0, 50);
+            localStorage.setItem("orbis_logs", JSON.stringify(logs));
+            
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const logs = JSON.parse(localStorage.getItem("orbis_logs") || "[]");
+            const container = document.getElementById("log-container");
+            container.innerHTML = logs.map(log => `<li class="log-item">${log}</li>`).join("");
+        }
+
+        function toggleStatus(ativoId) {
+            const currentStatus = localStorage.getItem(`status_${ativoId}`) || "Pendente";
+            const newStatus = currentStatus === "Pendente" ? "Processado" : "Pendente";
+            localStorage.setItem(`status_${ativoId}`, newStatus);
+            
+            addLog(`Alterado status de ${ativoId} para: ${newStatus}`);
+            renderTable();
+        }
+
+        function markAsProcessed(ativoId) {
+            localStorage.setItem(`status_${ativoId}`, "Processado");
+            addLog(`Ativo ${ativoId} marcado como Processado automaticamente ao clicar para preencher.`);
+            renderTable();
+        }
+
+        function removeRow(ativoId) {
+            dataRows = dataRows.filter(row => row.ativo !== ativoId);
+            addLog(`Ativo ${ativoId} removido da lista temporária.`);
+            renderTable();
+        }
+
+        function toggleHideDone() {
+            hideDone = document.getElementById("hide-done-checkbox").checked;
+            renderTable();
+        }
+
+        function exportProgress() {
+            const header = ["Código do Ativo", "Equipamento", "Setor / Localização", "Marca", "Modelo", "Série", "Patrimônio", "Condição", "Status"];
+            const csvContent = [];
+            csvContent.push(header.join(","));
+            
+            for (const row of dataRows) {
+                const status = localStorage.getItem(`status_${row.ativo}`) || "Pendente";
+                const displaySector = document.getElementById("default-sector-select").value || row.setor || "";
+                const line = [
+                    `"${row.ativo.replace(/"/g, '""')}"`,
+                    `"${(row.equipamento || "").replace(/"/g, '""')}"`,
+                    `"${displaySector.replace(/"/g, '""')}"`,
+                    `"${(row.fabricante || "").replace(/"/g, '""')}"`,
+                    `"${(row.modelo || "").replace(/"/g, '""')}"`,
+                    `"${(row.num_serie || "").replace(/"/g, '""')}"`,
+                    `"${(row.patrimonio || "").replace(/"/g, '""')}"`,
+                    `"${(row.condicao || "").replace(/"/g, '""')}"`,
+                    `"${status}"`
+                ];
+                csvContent.push(line.join(","));
+            }
+            
+            const blob = new Blob([csvContent.join("\n")], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "progresso_inspecoes.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            addLog("Progresso exportado como arquivo CSV.");
+        }
+
+        function renderTable() {
+            const container = document.getElementById("rows-container");
+            let filteredRows = dataRows;
+            
+            if (hideDone) {
+                filteredRows = dataRows.filter(row => {
+                    const status = localStorage.getItem(`status_${row.ativo}`) || "Pendente";
+                    return status !== "Processado";
+                });
+            }
+            
+            const defaultSector = document.getElementById("default-sector-select").value;
+            
+            container.innerHTML = filteredRows.map((row, idx) => {
+                const status = localStorage.getItem(`status_${row.ativo}`) || "Pendente";
+                const statusClass = status === "Pendente" ? "status-pending" : "status-done";
+                const prefilledUrl = generatePrefilledUrl(row);
+                
+                const displaySector = defaultSector || row.setor || "-";
+                
+                return `
+                    <tr>
+                        <td style="font-weight: 600; color: #a5b4fc;">${row.ativo}</td>
+                        <td>${row.equipamento || "-"}</td>
+                        <td style="color: var(--text-secondary); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${displaySector}">${displaySector}</td>
+                        <td>${row.condicao || "-"}</td>
+                        <td>
+                            <span class="status-badge ${statusClass}" onclick="toggleStatus('${row.ativo}')">
+                                ${status}
+                            </span>
+                        </td>
+                        <td style="display: flex; gap: 0.5rem; align-items: center;">
+                            <a href="${prefilledUrl}" target="_blank" class="btn-fill" onclick="markAsProcessed('${row.ativo}'); addLog('Formulario pre-preenchido aberto para ${row.ativo}')">
+                                Preencher no Edge/Chrome
+                            </a>
+                            <button class="btn-delete" onclick="removeRow('${row.ativo}')">
+                                Remover
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        // Parser manual de CSV
+        function parseCSV(text) {
+            const lines = [];
+            let row = [""];
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
+                const next = text[i+1];
+                if (c === '"') {
+                    if (inQuotes && next === '"') {
+                        row[row.length - 1] += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (c === ',' && !inQuotes) {
+                    row.push('');
+                } else if ((c === '\r' || c === '\n') && !inQuotes) {
+                    if (c === '\r' && next === '\n') {
+                        i++;
+                    }
+                    lines.push(row);
+                    row = [''];
+                } else {
+                    row[row.length - 1] += c;
+                }
+            }
+            if (row.length > 1 || row[0] !== '') {
+                lines.push(row);
+            }
+            return lines;
+        }
+
+        function loadCSVData(csvText) {
+            const parsed = parseCSV(csvText);
+            if (parsed.length < 2) return;
+            
+            const rawHeader = parsed[0];
+            const dataRowsRaw = parsed.slice(1);
+            
+            const getIndex = (names) => {
+                return rawHeader.findIndex(h => names.some(n => h.toLowerCase().includes(n.toLowerCase())));
+            };
+            
+            const idxAtivo = getIndex(["código do ativo", "ativo", "tag", "código"]);
+            const idxEquip = getIndex(["equipamento"]);
+            const idxFab = getIndex(["fabricante", "marca", "produtor"]);
+            const idxMod = getIndex(["modelo"]);
+            const idxSerie = getIndex(["série", "serial", "s/n"]);
+            const idxPatr = getIndex(["patrimônio", "tag"]);
+            const idxSetor = getIndex(["setor", "localização", "sala"]);
+            const idxObs = getIndex(["observações", "diagnósticos", "obs"]);
+            const idxCond = getIndex(["condição"]);
+            const idxPrev = getIndex(["preventiva", "próxima preventiva"]);
+            const idxCal = getIndex(["calibração", "próxima calibração"]);
+            const idxTse = getIndex(["seg. elétrica", "tse", "próxima seg. elétrica"]);
+            
+            // Mapeamento dinâmico
+            const newDataRows = [];
+            for (const r of dataRowsRaw) {
+                if (r.length < 2) continue;
+                
+                let ativoVal = idxAtivo !== -1 ? r[idxAtivo] : r[0];
+                if (!ativoVal || ativoVal.trim() === "") continue;
+                
+                newDataRows.push({
+                    ativo: ativoVal,
+                    equipamento: idxEquip !== -1 ? r[idxEquip] : "",
+                    fabricante: idxFab !== -1 ? r[idxFab] : "",
+                    modelo: idxMod !== -1 ? r[idxMod] : "",
+                    num_serie: idxSerie !== -1 ? r[idxSerie] : "",
+                    patrimonio: idxPatr !== -1 ? r[idxPatr] : "",
+                    setor: idxSetor !== -1 ? r[idxSetor] : "",
+                    obs: idxObs !== -1 ? r[idxObs] : "",
+                    condicao: idxCond !== -1 ? r[idxCond] : "Boa",
+                    val_prev: idxPrev !== -1 ? r[idxPrev] : "",
+                    val_cal: idxCal !== -1 ? r[idxCal] : "",
+                    val_tse: idxTse !== -1 ? r[idxTse] : ""
+                });
+            }
+            
+            if (newDataRows.length > 0) {
+                dataRows = newDataRows;
+                renderTable();
+                addLog(`Sucesso: Carregada nova planilha contendo ${newDataRows.length} registros.`);
+            } else {
+                alert("Erro: Nenhuma coluna de identificação ('Código do Ativo' ou similar) foi localizada.");
+            }
+        }
+
+        function handleFileSelect(evt) {
+            const file = evt.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                loadCSVData(e.target.result);
+            };
+            reader.readAsText(file, "UTF-8");
+        }
+
+        // Setup Drag & Drop
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.name.endsWith('.csv')) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    loadCSVData(evt.target.result);
+                };
+                reader.readAsText(file, "UTF-8");
+            }
+        });
+
+        // Inicialização
+        const sectorSelect = document.getElementById("default-sector-select");
+        sectorOptions.forEach(opt => {
+            const el = document.createElement("option");
+            el.value = opt;
+            el.textContent = opt;
+            sectorSelect.appendChild(el);
+        });
+
+        if (!localStorage.getItem("orbis_logs")) {
+            addLog("Painel iniciado. Aguardando processamento dos itens...");
+        }
+        renderTable();
+        renderLogs();
+    </script>
+</body>
+</html>

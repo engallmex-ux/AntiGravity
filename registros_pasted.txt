@@ -1,0 +1,369 @@
+💉 BOMBAS DE INFUSÃO (SAMTRONIC - COMODATO)
+REGISTRO 01
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-ENTERAL
+Nº Série (SN): 01604BC/00
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 02
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-ENTERAL
+Nº Série (SN): 01639BC/00
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 03
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-ENTERAL
+Nº Série (SN): 01658BC/00
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 04
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-ENTERAL
+Nº Série (SN): 01665BC/00
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 05
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-ENTERAL
+Nº Série (SN): 01667BC/00
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 06
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-ENTERAL
+Nº Série (SN): 01722BC/00
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 07
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-ENTERAL
+Nº Série (SN): 03488BC/00
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 08
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0
+Nº Série (SN): 58030V/00
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 09
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0
+Nº Série (SN): 61661V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 10
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0
+Nº Série (SN): 65350V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 11
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0
+Nº Série (SN): 65352V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 12
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0
+Nº Série (SN): 69733V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica (Data de fabricação visível: 08/2021). Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 13
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0
+Nº Série (SN): 74710V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 14
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0
+Nº Série (SN): 74945V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 15
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-INTELLI WIFI
+Nº Série (SN): 68820V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 16
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-4.0-INTELLI WIFI
+Nº Série (SN): 74272V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 17
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: ICATU S-3-ED
+Nº Série (SN): 65324V/01
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificação realizada por etiqueta de fábrica. Equipamento alocado, pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 18
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: Infusion Systems (Linha Antiga)
+Nº Série (SN): 30634 E
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Observações de Auditoria: Máquina antiga não identificada na planilha ativa atual, mas identificada como pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 19
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: Infusion Systems (Linha Antiga)
+Nº Série (SN): 30778 E
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Observações de Auditoria: Máquina antiga não identificada na planilha ativa atual, mas identificada como pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 20
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: Infusion Systems (Linha Antiga)
+Nº Série (SN): 30780 E
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Observações de Auditoria: Máquina antiga não identificada na planilha ativa atual, mas identificada como pertencente ao TERMO DE COMODATO Nº 02/2025.
+REGISTRO 21
+Categoria/Equipamento: Bomba de Infusão
+Fabricante: Samtronic
+Modelo: Infusion Systems (Linha Antiga)
+Nº Série (SN): 30791 E
+Patrimônio EBSERH (6 dígitos): Equipamento sob contrato de comodato
+Patrimônio RFID (10 dígitos): Equipamento sob contrato de comodato
+Observações de Auditoria: Máquina antiga não identificada na planilha ativa atual, mas identificada como pertencente ao TERMO DE COMODATO Nº 02/2025.
+🌬️ VENTILADORES E RESPIRADORES
+REGISTRO 22
+Categoria/Equipamento: Ventilador de UTI
+Fabricante: Tecme
+Modelo: Graphnet TS+
+Nº Série (SN): N/A na foto
+Patrimônio EBSERH (6 dígitos): 501.492
+Patrimônio RFID (10 dígitos): N/A na foto
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Monitor/painel com identificação de alarmes.
+REGISTRO 23
+Categoria/Equipamento: Ventilador BIPAP/CPAP
+Fabricante: BMC
+Modelo: G-3-B-30-VT
+Nº Série (SN): N/A na foto
+Patrimônio EBSERH (6 dígitos): N/A na foto
+Patrimônio RFID (10 dígitos): 0010022134
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Cruzamento realizado via planilha do inventário.
+🫁 ASPIRADORES DE BAIXO VOLUME
+REGISTRO 24
+Categoria/Equipamento: Aspirador de Baixo Volume
+Fabricante: Indústria de Aparelhos Médicos Ltda (Aspiramax)
+Modelo: MA-520 60
+Nº Série (SN): EJ44860
+Patrimônio EBSERH (6 dígitos): 498.600
+Patrimônio RFID (10 dígitos): N/A na foto
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Tensão 127/220V~.
+REGISTRO 25
+Categoria/Equipamento: Aspirador de Baixo Volume
+Fabricante: Indústria de Aparelhos Médicos Ltda (Aspiramax)
+Modelo: MA-520 60
+Nº Série (SN): EJ44857
+Patrimônio EBSERH (6 dígitos): 498.607
+Patrimônio RFID (10 dígitos): N/A na foto
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Tensão 127/220V~.
+REGISTRO 26
+Categoria/Equipamento: Aspirador de Baixo Volume
+Fabricante: Indústria de Aparelhos Médicos Ltda (Aspiramax)
+Modelo: MA-520 60
+Nº Série (SN): EJ44860
+Patrimônio EBSERH (6 dígitos): 498.609
+Patrimônio RFID (10 dígitos): N/A na foto
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: ATENÇÃO AUDITORIA: O número de série (EJ44860) presente na etiqueta de fábrica deste equipamento é idêntico ao do patrimônio 498.600. Pode se tratar de erro de etiquetagem do fabricante.
+🛏️ CAMAS / LEITOS (EM MANUTENÇÃO)
+REGISTRO 27
+Categoria/Equipamento: Cama Elétrica
+Fabricante: Lanco
+Modelo: CH-4001
+Nº Série (SN): N/A na foto
+ID Interno / Patrimônio: 139204
+Patrimônio RFID (10 dígitos): N/A
+Ordem de Serviço (OS): 25515 (Aguardando compra)
+Observações de Auditoria: Defeito registrado no ORBIS: Grade completa lateral direita. Responsável: Nyctor Hugo.
+REGISTRO 28
+Categoria/Equipamento: Cama Elétrica
+Fabricante: Lanco
+Modelo: CH-4001
+Nº Série (SN): N/A na foto
+ID Interno / Patrimônio: 139211
+Patrimônio RFID (10 dígitos): N/A
+Ordem de Serviço (OS): 25508 (Aguardando compra)
+Observações de Auditoria: Defeito registrado no ORBIS: Grade completa lateral direita. Responsável: Nyctor Hugo.
+REGISTRO 29
+Categoria/Equipamento: Cama Elétrica
+Fabricante: Linet
+Modelo: Eleganza-1
+Nº Série (SN): N/A na foto
+ID Interno / Patrimônio: 20250294822
+Patrimônio RFID (10 dígitos): N/A
+Ordem de Serviço (OS): 26409 (Aguardando garantia)
+Observações de Auditoria: Defeito registrado no ORBIS: Trava lateral esquerda quebrada. Responsável: Nyctor Hugo.
+REGISTRO 30
+Categoria/Equipamento: Cama / Leito
+Fabricante: Não identificado
+Modelo: Não identificado
+Patrimônio EBSERH (6 dígitos): 501.276
+Observações de Auditoria: Possui selo adicional indicando "PMSC/HU-UFSCar EBSERH 0028".
+REGISTRO 31
+Categoria/Equipamento: Cama / Leito
+Fabricante: Não identificado
+Modelo: Não identificado
+Patrimônio EBSERH (6 dígitos): 501.558
+Observações de Auditoria: Possui selo adicional indicando "PMSC/HU-UFSCar EBSERH 0030".
+⚖️ BALANÇAS DE PACIENTE
+REGISTRO 32
+Categoria/Equipamento: Balança de Plataforma Eletrônica
+Fabricante: Líder
+Modelo: P-300-C
+Nº Série (SN): N/A na foto
+Patrimônio EBSERH (6 dígitos): N/A na foto
+Patrimônio RFID (10 dígitos): 0010022687
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Cruzamento realizado via planilha do inventário.
+REGISTRO 33
+Categoria/Equipamento: Balança de Plataforma Eletrônica
+Fabricante: Líder
+Modelo: P-300-C
+Nº Série (SN): N/A na foto
+Patrimônio EBSERH (6 dígitos): N/A na foto
+Patrimônio RFID (10 dígitos): 0010022688
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Cruzamento realizado via planilha do inventário.
+REGISTRO 34
+Categoria/Equipamento: Balança Infantil Eletrônica
+Fabricante: Ramuza
+Modelo: Baby
+Registro Interno (Engª Clínica): UCA0019
+Patrimônio EBSERH associado na planilha: 501.152
+Observações de Auditoria: Possui selo de verificação do Inmetro.
+💓 ELETROCARDIÓGRAFOS
+REGISTRO 35
+Categoria/Equipamento: Eletrocardiógrafo
+Fabricante: Alfamed
+Modelo: Ritmus-1200-A
+Nº Série (SN): N/A na foto
+Patrimônio EBSERH (6 dígitos): N/A na foto
+Patrimônio RFID (10 dígitos): 0010022742
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Equipamento na cor verde. Cruzamento realizado via planilha do inventário.
+REGISTRO 36
+Categoria/Equipamento: Eletrocardiógrafo
+Fabricante: Comen
+Modelo: CM-1200-B
+Registro Interno (Engª Clínica): AMB0025
+Observações de Auditoria: Etiqueta indica equipamento de "AMBULATÓRIO".
+💧 MÁQUINAS DE OSMOSE REVERSA
+REGISTRO 37
+Categoria/Equipamento: Máquina de Osmose Reversa
+Fabricante: Vexer
+Modelo: VOP-00100
+Nº Série (SN): N/A na foto
+Patrimônio EBSERH (6 dígitos): 501.218
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Possui selo do serviço de manutenção (Grupo Souza Silva).
+REGISTRO 38
+Categoria/Equipamento: Máquina de Osmose Reversa
+Fabricante: Vexer
+Modelo: VOP-00100
+Nº Série (SN): N/A na foto
+Patrimônio EBSERH (6 dígitos): 501.222
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Identificada no equipamento como "OSMOSE III".
+🩸 OXÍMETRO DE PULSO
+REGISTRO 39
+Categoria/Equipamento: Oxímetro de Pulso
+Fabricante: MD
+Modelo: VS-2000-E
+Nº Série (SN): N/A na foto
+Patrimônio EBSERH (6 dígitos): 499.607
+Patrimônio RFID (10 dígitos): 0010019613
+Ordem de Serviço (OS): Sem chamados abertos nas imagens
+Observações de Auditoria: Pela planilha, constatou-se que o código de barras tradicional e o RFID solto referem-se à mesma máquina.
+🧰 MALETAS E ESTOJOS
+REGISTRO 40 | Maleta/Estojo | Patrimônio EBSERH: 498.758
+REGISTRO 41 | Maleta/Estojo | Patrimônio EBSERH: 498.759
+REGISTRO 42 | Maleta/Estojo | Patrimônio EBSERH: 498.760
+REGISTRO 43 | Maleta/Estojo | Patrimônio EBSERH: 498.761
+REGISTRO 44 | Maleta/Estojo | Patrimônio EBSERH: 498.762
+REGISTRO 45 | Maleta/Estojo | Patrimônio EBSERH: 498.763
+REGISTRO 46 | Maleta/Estojo | Patrimônio EBSERH: 498.764
+REGISTRO 47 | Maleta/Estojo | Patrimônio EBSERH: 498.765
+REGISTRO 48 | Maleta/Estojo | Patrimônio EBSERH: 498.766
+REGISTRO 49 | Maleta/Estojo | Patrimônio EBSERH: 498.767
+REGISTRO 50 | Maleta/Estojo | Patrimônio EBSERH: 498.800
+⚠️ EQUIPAMENTOS NÃO IDENTIFICADOS (FALTA DE CORRESPONDÊNCIA NA PLANILHA)
+REGISTRO 51
+Equipamento: Desconhecido (aparenta estrutura branca com entrada de energia).
+Patrimônio RFID: 0010022453
+REGISTRO 52
+Equipamento: Desconhecido (aparenta estrutura branca com entrada de energia).
+Patrimônio RFID: 0010022452
+REGISTRO 53
+Equipamento: Desconhecido
+Patrimônio RFID: 0010022454
+REGISTRO 54
+Equipamento: Desconhecido
+Patrimônio EBSERH (6 dígitos): 501.092
+Patrimônio RFID (10 dígitos): 0010020591
+Observações de Auditoria: As duas etiquetas estão afixadas juntas no equipamento, revelando sua correlação, embora ausente da listagem ativa.

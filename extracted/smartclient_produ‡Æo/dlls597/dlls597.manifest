@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+<assemblyIdentity name="dlls597" version="1.0.0.0" processorArchitecture="amd64" type="win32"/>
+<file name= "api-ms-win-core-file-l1-2-0.dll"/>
+<file name= "api-ms-win-core-file-l2-1-0.dll"/>
+<file name= "api-ms-win-core-localization-l1-2-0.dll"/>
+<file name= "api-ms-win-core-processthreads-l1-1-1.dll"/>
+<file name= "api-ms-win-core-synch-l1-2-0.dll"/>
+<file name= "api-ms-win-core-timezone-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-conio-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-convert-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-environment-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-filesystem-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-heap-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-locale-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-math-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-multibyte-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-runtime-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-stdio-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-string-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-time-l1-1-0.dll"/>
+<file name= "api-ms-win-crt-utility-l1-1-0.dll"/>
+<file name= "kdchart2.dll"/>
+<file name= "libEGL.dll"/>
+<file name= "libGLESV2.dll"/>
+<file name= "msvcp140.dll"/>
+<file name= "opengl32sw.dll"/>
+<file name= "Qt5Core.dll"/>
+<file name= "Qt5Gui.dll"/>
+<file name= "Qt5Network.dll"/>
+<file name= "Qt5Positioning.dll"/>
+<file name= "Qt5PrintSupport.dll"/>
+<file name= "Qt5Qml.dll"/>
+<file name= "Qt5Quick.dll"/>
+<file name= "Qt5QuickWidgets.dll"/>
+<file name= "Qt5SerialPort.dll"/>
+<file name= "Qt5Svg.dll"/>
+<file name= "Qt5WebChannel.dll"/>
+<file name= "Qt5WebEngineCore.dll"/>
+<file name= "Qt5WebEngineWidgets.dll"/>
+<file name= "Qt5WebSockets.dll"/>
+<file name= "Qt5Widgets.dll"/>
+<file name= "Qt5Xml.dll"/>
+<file name= "singlesign.dll"/>
+<file name= "ucrtbase.dll"/>
+<file name= "vcruntime140.dll"/>
+</assembly>

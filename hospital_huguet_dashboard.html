@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Huguet - Painel de Engenharia Clínica & DROME IoT</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para gráficos avançados -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #05070f;
+            color: #f1f5f9;
+        }
+        .font-mono {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Barra de rolagem personalizada premium */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        .fade-transition {
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+        /* Efeitos luminosos para indicadores de alarmes e status */
+        .glow-green {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; box-shadow: 0 0 12px rgba(16, 185, 129, 0.4); }
+            50% { opacity: 0.6; box-shadow: 0 0 4px rgba(16, 185, 129, 0.1); }
+        }
+        .glow-red {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+            animation: pulse-red 1.5s infinite;
+        }
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
+            50% { opacity: 0.5; box-shadow: 0 0 6px rgba(239, 68, 68, 0.2); }
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            animation: pulse-cyan 2s infinite;
+        }
+        @keyframes pulse-cyan {
+            0%, 100% { opacity: 1; box-shadow: 0 0 12px rgba(6, 182, 212, 0.4); }
+            50% { opacity: 0.6; box-shadow: 0 0 4px rgba(6, 182, 212, 0.1); }
+        }
+        /* Estruturas de transparência Glassmorphism */
+        .glass-card {
+            background: rgba(10, 15, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden text-slate-100 bg-slate-950">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- SIDEBAR (Esquerda) -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-[#0a0f1d] border-r border-slate-900 text-white transition-transform duration-300 transform -translate-x-full md:translate-x-0 md:relative">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-900">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-cyan-600 rounded-lg text-white glow-cyan">
+                        <i class="fa-solid fa-droplet text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-lg leading-tight tracking-tight text-white">Huguet</h1>
+                        <span class="text-[10px] text-cyan-400 font-bold tracking-wider uppercase">Engenharia & IoT</span>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navegação principal de abas -->
+            <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+                <a href="#" id="nav-dashboard" onclick="switchTab('dashboard')" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl bg-slate-900 text-cyan-400 border border-slate-800 transition-colors">
+                    <i class="fa-solid fa-chart-line w-5 mr-3"></i>
+                    Painel Geral
+                </a>
+                <a href="#" id="nav-ordens" onclick="switchTab('ordens')" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    <i class="fa-solid fa-file-medical w-5 mr-3"></i>
+                    Ordens Ativas
+                </a>
+                <a href="#" id="nav-config" onclick="switchTab('config')" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                    <i class="fa-solid fa-sliders w-5 mr-3"></i>
+                    Modulação DROME
+                </a>
+                <a href="#" id="nav-api" onclick="switchTab('api')" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition-colors relative">
+                    <i class="fa-solid fa-circle-nodes w-5 mr-3"></i>
+                    Integração & APIs
+                    <span class="absolute top-3.5 right-3 h-2 w-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                </a>
+                
+                <div class="pt-6 mt-6 border-t border-slate-900">
+                    <p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Central de Operações</p>
+                    <button onclick="openTvMode()" class="w-full flex items-center justify-center px-4 py-3.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-sm font-extrabold shadow-lg shadow-cyan-950/30 transition-all">
+                        <i class="fa-solid fa-desktop mr-2 animate-pulse"></i> INICIAR MODO TV ⚡
+                    </button>
+                </div>
+            </nav>
+
+            <div class="p-4 border-t border-slate-900 bg-slate-950/40">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center font-bold text-cyan-400">
+                        HU
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-slate-200 truncate">Hospital Huguet</p>
+                        <p class="text-[10px] text-slate-500 truncate">Central de Monitoramento</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN WINDOW WRAPPER -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-950">
+            <header class="bg-[#080d1a] border-b border-slate-900 h-16 flex items-center justify-between px-6 flex-shrink-0">
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 text-slate-400 hover:bg-slate-900 rounded-lg">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 id="page-title" class="text-base font-extrabold text-white">Painel Geral Engenharia Clínica</h2>
+                        <p id="page-subtitle" class="text-[11px] text-slate-400">Gerenciador de ordens e integração de sensores IoT em tempo real</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="bg-cyan-500/10 border border-cyan-500/20 rounded-lg px-3 py-1 flex items-center space-x-1.5">
+                        <span class="h-2 w-2 bg-cyan-400 rounded-full animate-ping"></span>
+                        <span class="text-[11px] font-bold text-cyan-300 font-mono">INTEGRAÇÃO DE APIs</span>
+                    </div>
+                    <button onclick="openNewOrderModal()" class="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-emerald-900/20">
+                        <i class="fa-solid fa-plus mr-1.5"></i> Abrir Chamado
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-6 space-y-6" id="main-content-area">
+
+                <!-- TAB 1: PAINEL GERAL -->
+                <div id="tab-dashboard" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">OS Preventivas Programadas</p>
+                                <h3 class="text-2xl font-black text-white mt-1" id="kpi-preventivas">4</h3>
+                                <p class="text-[11px] text-cyan-400 mt-1 font-semibold"><i class="fa-solid fa-calendar mr-1"></i> Acompanhamento ativo</p>
+                            </div>
+                            <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-lg"><i class="fa-solid fa-stethoscope text-xl"></i></div>
+                        </div>
+                        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">OS Corretivas Ativas</p>
+                                <h3 class="text-2xl font-black text-white mt-1" id="kpi-corretivas">3</h3>
+                                <p class="text-[11px] text-amber-500 mt-1 font-semibold"><i class="fa-solid fa-wrench mr-1"></i> Intervenções imediatas</p>
+                            </div>
+                            <div class="p-3 bg-amber-500/10 text-amber-400 rounded-lg"><i class="fa-solid fa-triangle-exclamation text-xl"></i></div>
+                        </div>
+                        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Módulos DROME Conectados</p>
+                                <h3 class="text-2xl font-black text-white mt-1" id="kpi-active-modules">7 / 7</h3>
+                                <p class="text-[11px] text-emerald-400 mt-1 font-semibold"><i class="fa-solid fa-circle-nodes mr-1"></i> Telemetria Ativa</p>
+                            </div>
+                            <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-lg"><i class="fa-solid fa-microchip text-xl"></i></div>
+                        </div>
+                        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Osmose Condutividade</p>
+                                <h3 class="text-2xl font-black text-cyan-400 mt-1 font-mono" id="kpi-osmose-cond">1.2 <span class="text-xs text-slate-400">µS/cm</span></h3>
+                                <p class="text-[11px] text-emerald-400 mt-1 font-semibold"><i class="fa-solid fa-droplet mr-1"></i> Água Dialítica OK</p>
+                            </div>
+                            <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-lg"><i class="fa-solid fa-faucet-drip text-xl"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Volume e Histórico Geral de OS -->
+                        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800/80 lg:col-span-2 flex flex-col">
+                            <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                                <div>
+                                    <h3 class="font-bold text-sm text-white">Volume e Histórico Geral de OS</h3>
+                                    <p class="text-[11px] text-slate-400">Acompanhamento contínuo dos chamados corretivos e preventivos</p>
+                                </div>
+                                <div class="flex bg-slate-950 p-1 rounded-lg border border-slate-800 text-[10px]">
+                                    <button id="btn-chart-semana" onclick="updateChartType('semana')" class="px-2.5 py-1 bg-cyan-600 font-extrabold text-white rounded transition-all">
+                                        Distribuição Semanal (Seg-Dom)
+                                    </button>
+                                    <button id="btn-chart-horas" onclick="updateChartType('horas')" class="px-2.5 py-1 text-slate-400 font-bold rounded hover:text-white transition-all">
+                                        Fluxo por Horário (24 Horas)
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="h-64 flex-1 relative"><canvas id="chart-historico"></canvas></div>
+                        </div>
+
+                        <!-- Configuração Rápida de Visualização -->
+                        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800/80 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-sm text-white mb-2">Configuração Rápida de Visualização</h3>
+                                <p class="text-[11px] text-slate-400 mb-4">Selecione quais os módulos críticos você possui habilitados no hospital para serem integrados e exibidos na sequência automatizada do Modo TV.</p>
+                                <div class="space-y-3" id="quick-modules-toggles-container">
+                                    <!-- Carregamento dinâmico via JS -->
+                                </div>
+                            </div>
+                            <button onclick="openTvMode()" class="w-full mt-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-all border border-slate-700 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-desktop animate-pulse"></i> <span>Abrir Painel Modo TV</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Chamados -->
+                    <div class="bg-slate-900 rounded-xl border border-slate-800/80 overflow-hidden">
+                        <div class="p-5 border-b border-slate-800/80 flex items-center justify-between flex-wrap gap-2">
+                            <h3 class="font-bold text-sm text-white">Fila de Ordens de Serviço (Engenharia Clínica)</h3>
+                            <input type="text" id="search-os" placeholder="Filtrar por equipamento, OS..." oninput="filterOrders()" class="text-xs bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 w-48 text-slate-200">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs text-slate-300">
+                                <thead class="bg-slate-950 text-[10px] font-bold text-slate-500 uppercase">
+                                    <tr>
+                                        <th class="py-3 px-4">Registro</th>
+                                        <th class="py-3 px-4">Equipamento</th>
+                                        <th class="py-3 px-4">Setor</th>
+                                        <th class="py-3 px-4">Técnico</th>
+                                        <th class="py-3 px-4">Classificação</th>
+                                        <th class="py-3 px-4">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="os-table-body" class="divide-y divide-slate-800">
+                                    <!-- Carregamento dinâmico via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: ORDENS ATIVAS -->
+                <div id="tab-ordens" class="space-y-6 hidden">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <div>
+                            <h3 class="text-sm font-bold text-white">Gerenciamento de Ordens Ativas</h3>
+                            <p class="text-xs text-slate-400">Distribuição visual das ordens por fluxo prioritário e responsabilidade técnica</p>
+                        </div>
+                        <div class="flex space-x-2 bg-slate-900 p-1 rounded-lg border border-slate-800">
+                            <button onclick="filterByStatus('TODOS')" class="px-3 py-1.5 text-xs font-bold rounded bg-slate-800 text-slate-200" id="filter-all">Todas</button>
+                            <button onclick="filterByStatus('ABERTO')" class="px-3 py-1.5 text-xs font-bold rounded bg-slate-950 text-slate-400 hover:text-white" id="filter-open">Abertas</button>
+                            <button onclick="filterByStatus('EM PROGRESSO')" class="px-3 py-1.5 text-xs font-bold rounded bg-slate-950 text-slate-400 hover:text-white" id="filter-prog">Em Progresso</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="orders-grid-container">
+                        <!-- Carregado via script -->
+                    </div>
+                </div>
+
+                <!-- TAB 3: CONFIGURAÇÃO MODULAR COMPLETA -->
+                <div id="tab-config" class="space-y-6 hidden">
+                    <div class="bg-slate-900 p-6 rounded-xl border border-slate-800/80">
+                        <h3 class="text-base font-extrabold text-white mb-1">Módulos Críticos da Infraestrutura Hospitalar</h3>
+                        <p class="text-xs text-slate-400 mb-6">Ative e configure o escopo de atuação de cada setor de monitoramento. Os itens habilitados tornam-se disponíveis para transição contínua em tempo real no Modo TV.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="drome-modules-grid">
+                            <!-- Carregado dinamicamente via script -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: INTEGRAÇÃO & CONFIGURAÇÃO DE APIs -->
+                <div id="tab-api" class="space-y-6 hidden">
+                    <div class="bg-slate-900 p-6 rounded-xl border border-slate-800/80">
+                        <div class="flex items-center justify-between border-b border-slate-850 pb-4 mb-4">
+                            <div>
+                                <h3 class="text-base font-extrabold text-white">Central de Conexão de APIs (Mapeamento de Telemetria)</h3>
+                                <p class="text-xs text-slate-400">Configure os endpoints de integração com os seus provedores físicos de rede IoT. Defina os cabeçalhos de autenticação e as chaves de leitura do JSON.</p>
+                            </div>
+                            <button onclick="restoreDefaultApiConfig()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs font-bold border border-slate-700">
+                                <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Padrão de Fábrica
+                            </button>
+                        </div>
+
+                        <!-- Lista de formulários de API por Módulo -->
+                        <div class="space-y-6" id="api-modules-list-container">
+                            <!-- Injetado dinamicamente via script -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODO TV OVERLAY (DARK-THEME PREMIUM GRAPHICAL MONITOR) -->
+    <div id="modo-tv-overlay" class="hidden fixed inset-0 bg-[#04060b] text-white z-50 flex flex-col justify-between p-6 overflow-hidden">
+        
+        <!-- Header fixo do Modo TV com os KPIs em Grid idênticos à Engenharia Clínica -->
+        <div class="border-b border-slate-900 pb-4 shrink-0 space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="p-2.5 bg-cyan-600 rounded-xl text-white glow-cyan">
+                        <i class="fa-solid fa-hospital text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-white flex items-center">
+                            HUGUET <span class="text-cyan-400 font-light ml-1.5">Hospital Intelligence Platform</span>
+                        </h2>
+                        <p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold flex items-center">
+                            <span class="h-1.5 w-1.5 bg-cyan-500 rounded-full inline-block mr-1.5 animate-ping"></span>
+                            Monitoramento Contínuo de Ambientes Críticos & Osmose
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div class="text-right">
+                        <p id="tv-clock" class="text-lg font-bold tracking-tight font-mono text-slate-100">17:19:58</p>
+                        <p id="tv-date" class="text-[9px] text-slate-500 uppercase tracking-widest">Domingo, 19 de Julho de 2026</p>
+                    </div>
+                    <!-- Menu flutuante de configurações rápidas -->
+                    <button onclick="toggleTvSettingsMenu()" class="p-2.5 bg-slate-900 hover:bg-slate-800 rounded-xl border border-slate-800 text-slate-300 transition-colors">
+                        <i class="fa-solid fa-gears text-sm"></i>
+                    </button>
+                    <button onclick="closeTvMode()" class="px-3 py-1.5 bg-red-950/40 hover:bg-red-900 text-red-200 border border-red-900/30 rounded-xl text-xs font-bold transition-all">
+                        Sair <i class="fa-solid fa-right-from-bracket ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPIs Superiores Fixos no Modo TV -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-900/30 p-3 rounded-xl border border-slate-900">
+                <div class="flex items-center space-x-3 px-4 py-1.5">
+                    <div class="text-cyan-400 text-lg"><i class="fa-solid fa-stethoscope"></i></div>
+                    <div>
+                        <span class="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Uptime Equipamentos</span>
+                        <span class="text-sm font-black font-mono text-white">99.85%</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 px-4 py-1.5 border-l border-slate-900">
+                    <div class="text-blue-400 text-lg"><i class="fa-solid fa-calendar-check"></i></div>
+                    <div>
+                        <span class="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">OS Preventivas / MP</span>
+                        <span class="text-sm font-black font-mono text-white" id="tv-kpi-prev">4</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 px-4 py-1.5 border-l border-slate-900">
+                    <div class="text-amber-400 text-lg"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div>
+                        <span class="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">OS Corretivas</span>
+                        <span class="text-sm font-black font-mono text-white text-amber-400" id="tv-kpi-corr">3</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 px-4 py-1.5 border-l border-slate-900">
+                    <div class="text-cyan-400 text-lg"><i class="fa-solid fa-droplet"></i></div>
+                    <div>
+                        <span class="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Condutividade Osmose</span>
+                        <span class="text-sm font-black font-mono text-cyan-400" id="tv-kpi-osm">1.2 µS/cm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TV Slides Containers -->
+        <div class="flex-1 relative my-4 flex flex-col justify-center overflow-hidden">
+            
+            <!-- SLIDE 0: Geral (Distribuição Classes e Produtividade Técnicos) -->
+            <div id="tv-slide-0" class="tv-slide absolute inset-0 flex flex-col justify-between fade-transition hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-[10px] font-black bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Slide Geral</span>
+                    <h3 class="text-lg font-extrabold text-white">Distribuição de Ordens por Classe e Produtividade de Técnicos</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-0">
+                    <div class="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl flex flex-col justify-between h-full">
+                        <p class="text-[11px] text-slate-400 font-bold uppercase mb-2">Distribuição por Classes de Chamado</p>
+                        <div class="flex-1 flex items-center justify-center relative min-h-0">
+                            <canvas id="chart-tv-classes" class="max-h-[180px] max-w-full"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl flex flex-col justify-between h-full">
+                        <p class="text-[11px] text-slate-400 font-bold uppercase mb-2">Performance dos Técnicos Alocados</p>
+                        <div class="flex-1 flex items-center justify-center relative min-h-0">
+                            <canvas id="chart-tv-tecnicos" class="max-h-[180px] max-w-full"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 1: Cadeia Fria & Ambientes -->
+            <div id="tv-slide-1" class="tv-slide absolute inset-0 flex flex-col justify-between fade-transition hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-black bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Módulo 01</span>
+                        <h3 class="text-lg font-extrabold text-white font-mono">Cadeia Fria & Ambientes Climatizados</h3>
+                    </div>
+                    <span class="text-xs text-emerald-400 font-bold"><i class="fa-solid fa-temperature-arrow-down mr-1"></i> Perdas de Cadeia: -40%</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 flex-1 items-center" id="tv-m1-container">
+                    <!-- Gerado Dinamicamente -->
+                </div>
+            </div>
+
+            <!-- SLIDE 2: Gases Medicinais -->
+            <div id="tv-slide-2" class="tv-slide absolute inset-0 flex flex-col justify-between fade-transition hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-black bg-blue-500/20 text-blue-300 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Módulo 02</span>
+                        <h3 class="text-lg font-extrabold text-white">Monitoramento de Gases Medicinais</h3>
+                    </div>
+                    <span class="text-xs text-blue-400 font-bold"><i class="fa-solid fa-gauge mr-1"></i> Detecção de Vazamento: &lt; 3s</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 flex-1 items-center" id="tv-m2-container">
+                    <!-- Gerado Dinamicamente -->
+                </div>
+            </div>
+
+            <!-- SLIDE 3: RTLS Indoor -->
+            <div id="tv-slide-3" class="tv-slide absolute inset-0 flex flex-col justify-between fade-transition hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-black bg-teal-500/20 text-teal-300 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Módulo 03</span>
+                        <h3 class="text-lg font-extrabold text-white">RTLS Indoor - Rastreamento Clínico de Ativos</h3>
+                    </div>
+                    <span class="text-xs text-teal-400 font-bold"><i class="fa-solid fa-search-location mr-1"></i> Tempo de Busca: -87%</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-0" id="tv-m3-container">
+                    <!-- Gerado Dinamicamente -->
+                </div>
+            </div>
+
+            <!-- SLIDE 4: Pressão Diferencial -->
+            <div id="tv-slide-4" class="tv-slide absolute inset-0 flex flex-col justify-between fade-transition hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-black bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Módulo 04</span>
+                        <h3 class="text-lg font-extrabold text-white font-mono">Pressão Diferencial de Isolamentos & Centro Cirúrgico</h3>
+                    </div>
+                    <span class="text-xs text-amber-400 font-bold"><i class="fa-solid fa-shield-virus mr-1"></i> Conforme ISO 14644 & RDC 50</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 items-center" id="tv-m4-container">
+                    <!-- Gerado Dinamicamente -->
+                </div>
+            </div>
+
+            <!-- SLIDE 5: Qualidade do Ar Interno -->
+            <div id="tv-slide-5" class="tv-slide absolute inset-0 flex flex-col justify-between fade-transition hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-black bg-pink-500/20 text-pink-300 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Módulo 05</span>
+                        <h3 class="text-lg font-extrabold text-white">Qualidade do Ar Interno & Monitor de Filtros HEPA</h3>
+                    </div>
+                    <span class="text-xs text-pink-400 font-bold"><i class="fa-solid fa-lungs mr-1"></i> Compliance ONA / JCI Ativo</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 items-center" id="tv-m5-container">
+                    <!-- Gerado Dinamicamente -->
+                </div>
+            </div>
+
+            <!-- SLIDE 6: Equipamentos Críticos -->
+            <div id="tv-slide-6" class="tv-slide absolute inset-0 flex flex-col justify-between fade-transition hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-black bg-red-500/20 text-red-300 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Módulo 06</span>
+                        <h3 class="text-lg font-extrabold text-white">Análise Vibracional de Motores & Equipamentos Críticos</h3>
+                    </div>
+                    <span class="text-xs text-red-400 font-bold"><i class="fa-solid fa-plug-circle-check mr-1"></i> Uptime Garantido por Contrato</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-0" id="tv-m6-container">
+                    <!-- Gerado Dinamicamente -->
+                </div>
+            </div>
+
+            <!-- SLIDE 7: Sistema de Osmose Reversa (Novo!) -->
+            <div id="tv-slide-7" class="tv-slide absolute inset-0 flex flex-col justify-between fade-transition hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-black bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Módulo 07</span>
+                        <h3 class="text-lg font-extrabold text-white font-mono">Monitoramento de Osmose Reversa - Tratamento de Água Dialítica</h3>
+                    </div>
+                    <span class="text-xs text-cyan-400 font-bold"><i class="fa-solid fa-vial-circle-check mr-1"></i> Em Conformidade com RDC 33/RDC 154</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 flex-1 items-center" id="tv-m7-container">
+                    <!-- Gerado Dinamicamente por script -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer / Slideshow controls -->
+        <div class="shrink-0 bg-[#070b13] p-4 rounded-xl border border-slate-900 flex justify-between items-center text-xs">
+            <div class="flex items-center space-x-3">
+                <button onclick="prevTvSlide()" class="p-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white rounded transition-colors"><i class="fa-solid fa-chevron-left"></i></button>
+                <button onclick="toggleTvPlayPause()" id="tv-btn-play-pause" class="p-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white rounded transition-colors"><i class="fa-solid fa-pause"></i></button>
+                <button onclick="nextTvSlide()" class="p-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white rounded transition-colors"><i class="fa-solid fa-chevron-right"></i></button>
+                
+                <!-- Display Indicators -->
+                <div class="flex space-x-1.5" id="tv-carousel-indicators-bullets">
+                    <!-- Bullets dinâmicos -->
+                </div>
+            </div>
+
+            <!-- Slide Progress and Label -->
+            <div class="flex-1 max-w-md mx-6">
+                <div class="flex justify-between text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1.5 font-mono">
+                    <span id="tv-next-slide-info">PRÓXIMO SLIDE...</span>
+                    <span id="tv-carousel-timer">10s</span>
+                </div>
+                <div class="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                    <div id="tv-carousel-progress" class="bg-cyan-500 h-1.5 rounded-full transition-all duration-100 ease-linear" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="text-right">
+                <span class="text-[10px] text-slate-500 uppercase font-bold tracking-widest block">Canal de Comunicação</span>
+                <span class="text-xs font-bold text-emerald-400 font-mono flex items-center justify-end"><i class="fa-solid fa-circle-nodes mr-1 animate-pulse"></i> APIs CONECTADAS</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK OVERLAY CONFIG MENU DIRECTLY INSIDE TV MODE -->
+    <div id="tv-settings-overlay-menu" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0b0f19] rounded-2xl border border-slate-800 max-w-md w-full p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                <h4 class="font-bold text-white text-sm flex items-center"><i class="fa-solid fa-gears text-cyan-400 mr-2"></i> Filtros de Exibição de Slides</h4>
+                <button onclick="toggleTvSettingsMenu()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-slate-400 mb-4">Escolha quais módulos físicos do DROME / Osmose estão ativos para não desperdiçar tempo em apresentações de slides vazios.</p>
+            <div class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1" id="tv-modal-toggles-container">
+                <!-- Populado via script -->
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button onclick="toggleTvSettingsMenu()" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold shadow-lg">Confirmar e Aplicar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE NOVA ORDEM -->
+    <div id="new-order-modal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0f172a] rounded-xl border border-slate-800 max-w-md w-full overflow-hidden shadow-2xl">
+            <div class="bg-slate-900 p-5 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-white text-sm flex items-center"><i class="fa-solid fa-file-medical text-emerald-500 mr-2"></i> Abrir Chamado Técnico</h3>
+                <button onclick="closeNewOrderModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="submitNewOrder(event)" class="p-5 space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-400 font-bold mb-1 uppercase tracking-wide">Equipamento</label>
+                    <input type="text" id="form-equipamento" required placeholder="Ex: Ventilador Pulmonar Bennett" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 text-slate-100">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-400 font-bold mb-1 uppercase tracking-wide">Setor</label>
+                        <select id="form-setor" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 text-slate-100">
+                            <option value="UTI Adulto">UTI Adulto</option>
+                            <option value="Centro Cirúrgico">Centro Cirúrgico</option>
+                            <option value="Pronto Socorro">Pronto Socorro</option>
+                            <option value="Radiologia">Radiologia</option>
+                            <option value="Central de Osmose">Central de Osmose</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 font-bold mb-1 uppercase tracking-wide">Classificação</label>
+                        <select id="form-classificacao" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 text-slate-100">
+                            <option value="CORRETIVA">CORRETIVA</option>
+                            <option value="PREVENTIVA">PREVENTIVA</option>
+                            <option value="CALIBRAÇÃO">CALIBRAÇÃO</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-400 font-bold mb-1 uppercase tracking-wide">Técnico</label>
+                        <input type="text" id="form-tecnico" required placeholder="Téc. Responsável" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 font-bold mb-1 uppercase tracking-wide">Prioridade</label>
+                        <select id="form-prioridade" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 text-slate-100">
+                            <option value="Planejada">Planejada</option>
+                            <option value="Urgente">Urgente</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeNewOrderModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg font-bold">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold shadow-md shadow-emerald-900/30">Salvar OS</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOASTS CONTAINER -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2"></div>
+
+    <script>
+        // Configuração Padrão das APIs de cada Módulo
+        const DEFAULT_API_CONFIGS = {
+            1: { url: "https://api.huguet.com.br/v1/cadeia-fria", method: "GET", token: "HUGUET-KEY-M1-SENSORS", mapping: "{\n  \"temp\": \"sensor.temperature\",\n  \"status\": \"sensor.status\"\n}", active: true },
+            2: { url: "https://api.huguet.com.br/v1/gases-medicinais", method: "GET", token: "HUGUET-KEY-M2-GASES", mapping: "{\n  \"pressure\": \"o2.pressure\",\n  \"level\": \"o2.level\"\n}", active: true },
+            3: { url: "https://api.huguet.com.br/v1/rtls-indoor", method: "GET", token: "HUGUET-KEY-M3-RTLS", mapping: "{\n  \"assets\": \"tracked.devices\",\n  \"location\": \"device.position\"\n}", active: true },
+            4: { url: "https://api.huguet.com.br/v1/pressao-diferencial", method: "GET", token: "HUGUET-KEY-M4-PRESS", mapping: "{\n  \"pressureDiff\": \"room.differential\",\n  \"status\": \"room.compliance\"\n}", active: true },
+            5: { url: "https://api.huguet.com.br/v1/qualidade-ar", method: "GET", token: "HUGUET-KEY-M5-IAQ", mapping: "{\n  \"co2\": \"air.co2\",\n  \"pm25\": \"air.pm25\"\n}", active: true },
+            6: { url: "https://api.huguet.com.br/v1/equipamentos-criticos", method: "GET", token: "HUGUET-KEY-M6-VIBR", mapping: "{\n  \"vibration\": \"motor.rms_vibe\",\n  \"uptime\": \"motor.contract_uptime\"\n}", active: true },
+            7: { url: "https://api.huguet.com.br/v1/osmose-reversa", method: "GET", token: "HUGUET-KEY-M7-OSMOSE", mapping: "{\n  \"conductivity\": \"osmosis.conductivity\",\n  \"flow_permeate\": \"osmosis.flow.permeate\"\n}", active: true }
+        };
+
+        // Carregar configurações das APIs do LocalStorage ou usar padrões
+        let apiConfigs = JSON.parse(localStorage.getItem('huguet_api_configs')) || JSON.parse(JSON.stringify(DEFAULT_API_CONFIGS));
+
+        // Ordens de Serviço Ativas
+        let ordensDeServico = [
+            { id: "OS-2026-001", equipamento: "Cardioversor Lifepak 15", setor: "Centro Cirúrgico", tecnico: "Eng. Marcos", classificacao: "PREVENTIVA", status: "EM PROGRESSO", prioridade: "Planejada", data: "19/07/2026" },
+            { id: "OS-2026-002", equipamento: "Ventilador Pulmonar Bennett 840", setor: "UTI Adulto", tecnico: "Téc. Sandra", classificacao: "CORRETIVA", status: "ABERTO", prioridade: "Urgente", data: "19/07/2026" },
+            { id: "OS-2026-003", equipamento: "Bomba de Infusão Alaris GP", setor: "Radiologia", tecnico: "Téc. Roberto", classificacao: "PREVENTIVA", status: "CONCLUÍDO", prioridade: "Planejada", data: "18/07/2026" },
+            { id: "OS-2026-004", equipamento: "Monitor Multiparamétrico Dixtal", setor: "UTI Neonatal", tecnico: "Eng. Patrícia", classificacao: "CORRETIVA", status: "EM PROGRESSO", prioridade: "Média", data: "17/07/2026" }
+        ];
+
+        // DROME + Osmose - Configuração de Módulos Críticos
+        let dromeModules = [
+            { id: 1, name: "Cadeia Fria & Ambientes", desc: "Câmaras frias, freezers biomédicos −30/−80°C e salas de imunobiológicos.", active: true, icon: "fa-temperature-low", colorClass: "text-emerald-400", nextLabel: "Módulo 01: Cadeia Fria" },
+            { id: 2, name: "Gases Medicinais", desc: "Monitoramento de O₂, vácuo clínico, ar comprimido e gases cirúrgicos.", active: true, icon: "fa-gauge", colorClass: "text-blue-400", nextLabel: "Módulo 02: Gases Medicinais" },
+            { id: 3, name: "RTLS Indoor", desc: "Geolocalização indoor de ativos médicos e equipamentos de alto valor.", active: true, icon: "fa-search-location", colorClass: "text-teal-400", nextLabel: "Módulo 03: RTLS Indoor" },
+            { id: 4, name: "Pressão Diferencial", desc: "Salas limpas e isolamento de infecções com controle conforme ISO 14644.", active: true, icon: "fa-compress-arrows-alt", colorClass: "text-amber-400", nextLabel: "Módulo 04: Pressão Diferencial" },
+            { id: 5, name: "Qualidade do Ar Interno", desc: "PM2.5, PM10, CO₂ e eficiência dos filtros HEPA do Centro Cirúrgico.", active: true, icon: "fa-lungs", colorClass: "text-pink-400", nextLabel: "Módulo 05: Qualidade do Ar" },
+            { id: 6, name: "Equipamentos Críticos", desc: "Autoclaves, chillers, compressores e motores com análise vibracional preditiva.", active: true, icon: "fa-microscope", colorClass: "text-red-400", nextLabel: "Módulo 06: Equipamentos" },
+            { id: 7, name: "Osmose Reversa (Água)", desc: "Controle de condutividade, vazões de permeado/rejeito e pressões das membranas.", active: true, icon: "fa-faucet-drip", colorClass: "text-cyan-400", nextLabel: "Módulo 07: Osmose Reversa" }
+        ];
+
+        // Telemetrias simuladas para exibição em tempo real (Modo TV)
+        let m1Sensors = [
+            { id: "S1-GEL", tag: "GEL-VAC-01", name: "Refrigerador de Vacinas UTI", temp: 4.2, minRef: 2.0, maxRef: 8.0, status: "ESTÁVEL" },
+            { id: "S1-FREEZ", tag: "FRZ-BIO-02", name: "Ultrafreezer Hemocentro", temp: -78.6, minRef: -86.0, maxRef: -70.0, status: "ESTÁVEL" },
+            { id: "S1-SAL", tag: "SAL-HEMO-03", name: "Climatização Hemodinâmica", temp: 21.3, minRef: 18.0, maxRef: 24.0, status: "ESTÁVEL" },
+            { id: "S1-CAM", tag: "CAM-FRIO-04", name: "Câmara Fria Farmácia Central", temp: 4.8, minRef: 2.0, maxRef: 8.0, status: "ESTÁVEL" }
+        ];
+
+        let m2Gases = [
+            { name: "Oxigênio Líquido (O₂)", pressure: 4.8, unit: "bar", status: "ESTÁVEL", level: 82 },
+            { name: "Ar Comprimido Clínico", pressure: 5.1, unit: "bar", status: "ESTÁVEL", level: 91 },
+            { name: "Vácuo Clínico Central", pressure: -620, unit: "mmHg", status: "ESTÁVEL", level: 75 },
+            { name: "Óxido Nitroso (N₂O)", pressure: 4.5, unit: "bar", status: "ESTÁVEL", level: 44 }
+        ];
+
+        let m3Assets = [
+            { tag: "BOMBA-104", type: "Bomba de Infusão", loc: "UTI Adulto - Leito 08", status: "EM USO", battery: 94 },
+            { tag: "MACA-12", type: "Maca Hidráulica", loc: "Pronto Socorro - Emergência", status: "LIVRE", battery: 100 },
+            { tag: "MONIT-88", type: "Monitor Multiparamétrico", loc: "Centro Cirúrgico - Sala 3", status: "EM USO", battery: 80 },
+            { tag: "BOMBA-109", type: "Bomba de Infusão", loc: "Pediatria - Leito 12", status: "OCIOSA", battery: 62 }
+        ];
+
+        let m4Rooms = [
+            { name: "Quarto Isolamento UTI-A", value: 12.4, unit: "Pa", status: "PRESSURIZADO", icon: "fa-compress-arrows-alt" },
+            { name: "Centro Cirúrgico - Sala 1", value: 6.2, unit: "Pa", status: "PRESSURIZADO", icon: "fa-shuffle" },
+            { name: "Sala Limpa Quimioterapia", value: 15.1, unit: "Pa", status: "PRESSURIZADO", icon: "fa-shield-halved" }
+        ];
+
+        let m5Air = [
+            { name: "Centro Cirúrgico Geral", pm25: 4.2, pm10: 9.8, co2: 520, filter: 94 },
+            { name: "Unidade Neonatal", pm25: 6.1, pm10: 12.4, co2: 580, filter: 88 },
+            { name: "Farmácia Especializada", pm25: 2.1, pm10: 5.5, co2: 440, filter: 98 }
+        ];
+
+        let m6Vibe = [
+            { name: "Autoclave Principal CME", vibe: 1.4, unit: "mm/s RMS", status: "OTIMIZADO", statusText: "Sem vibração prejudicial" },
+            { name: "Chiller Central Climatização", vibe: 3.8, unit: "mm/s RMS", status: "ALERTA", statusText: "Anomalia de rolamento detectada" },
+            { name: "Centrífuga de Laboratório 01", vibe: 0.8, unit: "mm/s RMS", status: "OTIMIZADO", statusText: "Operação estável" },
+            { name: "Exaustor de Isolamento UTI", vibe: 1.9, unit: "mm/s RMS", status: "OTIMIZADO", statusText: "Pressão garantida" }
+        ];
+
+        // Dados simulados do Módulo 07: Osmose Reversa (Novo!)
+        let m7Osmose = {
+            conductivity: 1.2, // µS/cm
+            flowPermeate: 450, // L/h
+            flowReject: 150,   // L/h
+            waterProducedDay: 8420, // Volume acumulado de água produzida no dia (L)
+            pressurePre: 4.2,  // bar
+            pressurePost: 2.1, // bar
+            temperature: 23.4, // °C
+            status: "OTIMIZADO"
+        };
+
+        // Controle do Carrossel do Modo TV
+        let activeTvSlides = [0]; // Começa apenas com o Geral (0)
+        let currentActiveSlideIdx = 0;
+        let tvCarouselInterval = null;
+        let tvProgressInterval = null;
+        let tvProgressValue = 0;
+        const TV_SLIDE_DURATION = 10000; // 10 segundos
+        let isTvCarouselPlaying = true;
+
+        // Instâncias Globais dos Gráficos
+        let chartHistorico = null;
+        let chartTvClasses = null;
+        let chartTvTecnicos = null;
+
+        // Estado do gráfico do Dashboard Geral (semana vs horas)
+        let activeChartMode = 'semana';
+
+        window.onload = function() {
+            recalculateMetrics();
+            initDashboardCharts();
+            renderTable(ordensDeServico);
+            renderGrid(ordensDeServico);
+            buildModulesToggles();
+            buildActiveSlidesList();
+            buildApiConfigurationForms();
+            
+            // Simular flutuação das leituras das APIs e sensores de telemetria a cada 4 segundos
+            setInterval(simulateSensorFluctuation, 4000);
+            updateTvClock();
+            setInterval(updateTvClock, 1000);
+        };
+
+        // Recalcular métricas de cabeçalhos e telas de KPIs
+        function recalculateMetrics() {
+            const activeModsCount = dromeModules.filter(m => m.active).length;
+            document.getElementById("kpi-active-modules").innerText = `${activeModsCount} / 7`;
+            
+            const preventivas = ordensDeServico.filter(o => o.classificacao === "PREVENTIVA" || o.classificacao === "CALIBRAÇÃO").length;
+            const corretivas = ordensDeServico.filter(o => o.classificacao === "CORRETIVA").length;
+            
+            document.getElementById("kpi-preventivas").innerText = preventivas;
+            document.getElementById("kpi-corretivas").innerText = corretivas;
+            
+            // Atualizar valores do cabeçalho da TV também se ela estiver visível
+            const tvPrev = document.getElementById("tv-kpi-prev");
+            const tvCorr = document.getElementById("tv-kpi-corr");
+            const tvOsm = document.getElementById("tv-kpi-osm");
+            
+            if(tvPrev) tvPrev.innerText = preventivas;
+            if(tvCorr) tvCorr.innerText = corretivas;
+            if(tvOsm) tvOsm.innerText = `${m7Osmose.conductivity.toFixed(2)} µS/cm`;
+            
+            document.getElementById("kpi-osmose-cond").innerHTML = `${m7Osmose.conductivity.toFixed(2)} <span class="text-xs text-slate-400">µS/cm</span>`;
+        }
+
+        // Construtor dos Controles Rápidos de Modulação (Dashboard Geral + Configurações)
+        function buildModulesToggles() {
+            const mainContainer = document.getElementById("quick-modules-toggles-container");
+            const modalContainer = document.getElementById("tv-modal-toggles-container");
+            const configGrid = document.getElementById("drome-modules-grid");
+
+            mainContainer.innerHTML = "";
+            modalContainer.innerHTML = "";
+            configGrid.innerHTML = "";
+
+            dromeModules.forEach(mod => {
+                const apiActive = apiConfigs[mod.id]?.active;
+                const statusBadge = mod.active 
+                    ? `<span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded font-mono font-bold">API ATIVA</span>`
+                    : `<span class="text-[9px] bg-slate-950 text-slate-500 border border-slate-900 px-1.5 py-0.5 rounded font-mono font-bold">INATIVO</span>`;
+
+                // 1. Renderizar controles rápidos da barra lateral direita do Dashboard
+                mainContainer.innerHTML += `
+                    <div class="flex items-center justify-between p-1 hover:bg-slate-950/20 rounded-lg">
+                        <span class="text-xs text-slate-300 font-medium flex items-center">
+                            <i class="fa-solid ${mod.icon} mr-2.5 ${mod.colorClass} w-4"></i> ${mod.name}
+                        </span>
+                        <div class="flex items-center space-x-2">
+                            ${statusBadge}
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" ${mod.active ? 'checked' : ''} onchange="toggleModule(${mod.id})" class="sr-only peer">
+                                <div class="w-8 h-4 bg-slate-950 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-cyan-500 peer-checked:after:bg-white"></div>
+                            </label>
+                        </div>
+                    </div>
+                `;
+
+                // 2. Renderizar controles rápidos no pop-up de ajustes do Modo TV
+                modalContainer.innerHTML += `
+                    <div class="flex items-center justify-between p-2 rounded hover:bg-slate-900 transition-colors">
+                        <span class="text-xs text-slate-200 font-semibold flex items-center">
+                            <i class="fa-solid ${mod.icon} mr-3 ${mod.colorClass} text-sm w-5"></i> ${mod.name}
+                        </span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" ${mod.active ? 'checked' : ''} onchange="toggleModule(${mod.id})" class="sr-only peer">
+                            <div class="w-9 h-5 bg-slate-950 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500 peer-checked:after:bg-white"></div>
+                        </label>
+                    </div>
+                `;
+
+                // 3. Renderizar na aba de Modulação Completa do DROME
+                configGrid.innerHTML += `
+                    <div class="p-5 rounded-xl border border-slate-800 bg-slate-950 flex flex-col justify-between space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 ${mod.colorClass}">
+                                    <i class="fa-solid ${mod.icon} text-lg"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-xs">${mod.name}</h4>
+                                    <span class="text-[9px] text-slate-500 font-bold uppercase tracking-wider font-mono">Módulo 0${mod.id}</span>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[8px] font-extrabold uppercase ${mod.active ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'bg-slate-900 text-slate-500 border border-slate-800'}">
+                                ${mod.active ? 'Habilitado' : 'Desativado'}
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">${mod.desc}</p>
+                        <div class="pt-3 border-t border-slate-900/60 flex justify-between items-center">
+                            <span class="text-[10px] text-slate-500 font-bold">Ativo na rotação do Modo TV</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" ${mod.active ? 'checked' : ''} onchange="toggleModule(${mod.id})" class="sr-only peer">
+                                <div class="w-8 h-4 bg-slate-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-cyan-500 peer-checked:after:bg-white"></div>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleModule(id) {
+            const mod = dromeModules.find(m => m.id === id);
+            if(mod) {
+                mod.active = !mod.active;
+                showToast(`Módulo 0${mod.id} (${mod.name}) ${mod.active ? 'ativado' : 'desativado'} para visualização.`);
+                buildModulesToggles();
+                buildActiveSlidesList();
+                recalculateMetrics();
+
+                // Se estiver no Modo TV, recalcular os slides e reajustar se o atual foi desligado
+                if(!document.getElementById("modo-tv-overlay").classList.contains("hidden")) {
+                    drawTvBullets();
+                    if(!activeTvSlides.includes(currentActiveSlideIdx)) {
+                        tvProgressValue = 0;
+                        showTvSlideByIdx(0);
+                    }
+                }
+            }
+        }
+
+        function buildActiveSlidesList() {
+            // Slide Geral S0 é fixo
+            let slides = [0];
+            dromeModules.forEach(mod => {
+                if(mod.active) {
+                    slides.push(mod.id); // O ID mapeia perfeitamente para o slide do Modo TV correspondente
+                }
+            });
+            activeTvSlides = slides;
+        }
+
+        // Inicialização e atualização dos gráficos do Dashboard
+        function initDashboardCharts() {
+            const ctxHist = document.getElementById("chart-historico").getContext("2d");
+            if(chartHistorico) chartHistorico.destroy();
+            
+            let labels = [];
+            let corretivasData = [];
+            let preventivasData = [];
+
+            if (activeChartMode === 'semana') {
+                labels = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+                corretivasData = [8, 12, 10, 15, 9, 6, 4];
+                preventivasData = [14, 18, 15, 20, 22, 11, 7];
+            } else {
+                // Modo 24 Horas
+                labels = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
+                corretivasData = [1, 0, 2, 4, 12, 18, 11, 15, 20, 14, 8, 3];
+                preventivasData = [3, 2, 1, 5, 8, 10, 15, 12, 14, 9, 7, 5];
+            }
+
+            chartHistorico = new Chart(ctxHist, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'OS Corretivas (Emergência)',
+                            data: corretivasData,
+                            borderColor: '#ef4444',
+                            borderWidth: 2,
+                            backgroundColor: 'rgba(239, 68, 68, 0.04)',
+                            tension: 0.35,
+                            fill: true
+                        },
+                        {
+                            label: 'OS Preventivas / MP / Calibração',
+                            data: preventivasData,
+                            borderColor: '#06b6d4',
+                            borderWidth: 2,
+                            backgroundColor: 'rgba(6, 182, 212, 0.04)',
+                            tension: 0.35,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8', font: { size: 10 } } }
+                    },
+                    scales: {
+                        x: { grid: { color: '#0f172a' }, ticks: { color: '#64748b', font: { size: 9 } } },
+                        y: { grid: { color: '#0f172a' }, ticks: { color: '#64748b', font: { size: 9 } } }
+                    }
+                }
+            });
+        }
+
+        function updateChartType(mode) {
+            activeChartMode = mode;
+            const btnSemana = document.getElementById("btn-chart-semana");
+            const btnHoras = document.getElementById("btn-chart-horas");
+
+            if (mode === 'semana') {
+                btnSemana.className = "px-2.5 py-1 bg-cyan-600 font-extrabold text-white rounded transition-all";
+                btnHoras.className = "px-2.5 py-1 text-slate-400 font-bold rounded hover:text-white transition-all";
+            } else {
+                btnSemana.className = "px-2.5 py-1 text-slate-400 font-bold rounded hover:text-white transition-all";
+                btnHoras.className = "px-2.5 py-1 bg-cyan-600 font-extrabold text-white rounded transition-all";
+            }
+
+            initDashboardCharts();
+            showToast(`Gráfico atualizado para visualização de ${mode === 'semana' ? 'distribuição diária de chamados' : 'fluxo horário de 24 horas'}.`);
+        }
+
+        // Gráficos de alta visibilidade internos do Modo TV (Slide Geral)
+        function initTvCharts() {
+            const ctxTvClass = document.getElementById("chart-tv-classes").getContext("2d");
+            const ctxTvTech = document.getElementById("chart-tv-tecnicos").getContext("2d");
+
+            if(chartTvClasses) chartTvClasses.destroy();
+            if(chartTvTecnicos) chartTvTecnicos.destroy();
+
+            chartTvClasses = new Chart(ctxTvClass, {
+                type: 'pie',
+                data: {
+                    labels: ['Preventivas', 'Corretivas', 'Calibrações'],
+                    datasets: [{
+                        data: [18, 12, 6],
+                        backgroundColor: ['#06b6d4', '#ef4444', '#10b981'],
+                        borderWidth: 1,
+                        borderColor: '#0b0f19'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 9 } } }
+                    }
+                }
+            });
+
+            chartTvTecnicos = new Chart(ctxTvTech, {
+                type: 'bar',
+                data: {
+                    labels: ['Marcos', 'Sandra', 'Roberto', 'Patrícia'],
+                    datasets: [{
+                        data: [15, 19, 11, 14],
+                        backgroundColor: '#06b6d4',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } },
+                        y: { grid: { color: '#0f172a' }, ticks: { color: '#64748b', font: { size: 9 } } }
+                    }
+                }
+            });
+        }
+
+        // Construtor do Formulário da Central de Integração de APIs por Módulo
+        function buildApiConfigurationForms() {
+            const container = document.getElementById("api-modules-list-container");
+            container.innerHTML = "";
+
+            dromeModules.forEach(mod => {
+                const config = apiConfigs[mod.id];
+                if (!config) return;
+
+                container.innerHTML += `
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-900 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-900 pb-2 flex-wrap gap-2">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 rounded bg-slate-900 ${mod.colorClass}">
+                                    <i class="fa-solid ${mod.icon}"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">${mod.name}</h4>
+                                    <span class="text-[10px] text-slate-500 font-mono">INTEGRAÇÃO DE TELEMETRIA DO MÓDULO 0${mod.id}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <label class="text-xs text-slate-400 font-semibold">Integrar API ao Sistema:</label>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" ${config.active ? 'checked' : ''} onchange="toggleApiIntegration(${mod.id})" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-slate-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-white"></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs">
+                            <div class="space-y-1">
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase">Endpoint URL da API</label>
+                                <input type="text" id="api-url-${mod.id}" value="${config.url}" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-cyan-500 text-slate-200 font-mono">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase">Token de Autenticação (Header)</label>
+                                <input type="password" id="api-token-${mod.id}" value="${config.token}" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-cyan-500 text-slate-200 font-mono">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase">Filtro / Variáveis de Leitura (JSON Mapping)</label>
+                                <textarea id="api-mapping-${mod.id}" rows="1" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-cyan-500 text-slate-200 font-mono resize-y h-9">${config.mapping}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-2 border-t border-slate-900/40 text-[11px]">
+                            <div class="flex items-center space-x-2 text-slate-400">
+                                <span class="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                                <span>Monitoramento a cada <strong>5 segundos</strong></span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="testApiConnection(${mod.id})" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded font-bold border border-slate-800 flex items-center space-x-1">
+                                    <i class="fa-solid fa-bolt text-amber-400"></i> <span>Testar Conexão</span>
+                                </button>
+                                <button onclick="saveApiConfiguration(${mod.id})" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-bold">
+                                    Salvar Ajustes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleApiIntegration(modId) {
+            apiConfigs[modId].active = !apiConfigs[modId].active;
+            localStorage.setItem('huguet_api_configs', JSON.stringify(apiConfigs));
+            const state = apiConfigs[modId].active ? "conectada e ativa" : "pausada";
+            showToast(`API do Módulo 0${modId} foi ${state}!`);
+            buildModulesToggles();
+        }
+
+        function saveApiConfiguration(modId) {
+            const urlInput = document.getElementById(`api-url-${modId}`).value;
+            const tokenInput = document.getElementById(`api-token-${modId}`).value;
+            const mappingInput = document.getElementById(`api-mapping-${modId}`).value;
+
+            apiConfigs[modId].url = urlInput;
+            apiConfigs[modId].token = tokenInput;
+            apiConfigs[modId].mapping = mappingInput;
+
+            localStorage.setItem('huguet_api_configs', JSON.stringify(apiConfigs));
+            showToast(`Configuração da API do Módulo 0${modId} salva com sucesso!`);
+        }
+
+        // Simulação realista de requisição HTTP à API com exibição de retorno JSON
+        function testApiConnection(modId) {
+            const url = document.getElementById(`api-url-${modId}`).value;
+            const token = document.getElementById(`api-token-${modId}`).value;
+            
+            showToast(`Enviando requisição GET para ${url}...`);
+
+            // Simular atraso de rede
+            setTimeout(() => {
+                let mockResponsePayload = {};
+                if (modId === 1) {
+                    mockResponsePayload = { status: "OK", timestamp: "2026-07-19T17:31:00Z", data: { sensors: { value: m1Sensors[0].temp.toFixed(1), humidity: "42%" } } };
+                } else if (modId === 7) {
+                    mockResponsePayload = { status: "ACTIVE", device: "RO_HUGUET_01", metrics: { conductivity: m7Osmose.conductivity.toFixed(2), permeate: m7Osmose.flowPermeate, temperature: m7Osmose.temperature } };
+                } else {
+                    mockResponsePayload = { status: "SUCCESS", device: `M0${modId}_CONTROLLER`, active: true, reading: "Telemetry parsed successfully" };
+                }
+
+                const container = document.getElementById("toast-container");
+                const responseModal = document.createElement("div");
+                responseModal.className = "bg-slate-900 border border-slate-800 text-white rounded-xl shadow-2xl p-5 max-w-sm font-mono text-[10px] space-y-3 z-50 fixed bottom-6 right-6 transition-all duration-300";
+                responseModal.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <span class="text-emerald-400 font-bold flex items-center"><i class="fa-solid fa-circle-check mr-1"></i> HTTP 200 OK</span>
+                        <button onclick="this.parentElement.parentElement.remove()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <p class="text-[9px] text-slate-500">RESPOSTA RECEBIDA DE MÓDULO ${modId}</p>
+                    <pre class="overflow-x-auto text-slate-300 bg-slate-950 p-2.5 rounded border border-slate-900 max-h-[140px]">${JSON.stringify(mockResponsePayload, null, 2)}</pre>
+                `;
+                container.appendChild(responseModal);
+            }, 1200);
+        }
+
+        function restoreDefaultApiConfig() {
+            apiConfigs = JSON.parse(JSON.stringify(DEFAULT_API_CONFIGS));
+            localStorage.setItem('huguet_api_configs', JSON.stringify(apiConfigs));
+            showToast("Configurações das APIs redefinidas para o padrão de fábrica.");
+            buildApiConfigurationForms();
+            buildModulesToggles();
+        }
+
+        // Simulação de flutuação de telemetria médica e de infraestrutura
+        function simulateSensorFluctuation() {
+            // Se as APIs correspondentes estiverem inativas no configurador, as flutuações param para simular 'congelamento'
+            
+            // Módulo 1 (Cadeia Fria)
+            if (apiConfigs[1].active) {
+                m1Sensors.forEach(s => {
+                    const diff = (Math.random() - 0.5) * 0.3;
+                    s.temp += diff;
+                    if(s.temp > s.maxRef || s.temp < s.minRef) {
+                        s.status = "CRÍTICO";
+                    } else {
+                        s.status = "ESTÁVEL";
+                    }
+                });
+            }
+
+            // Módulo 2 (Gases)
+            if (apiConfigs[2].active) {
+                m2Gases.forEach(g => {
+                    const diff = (Math.random() - 0.5) * 0.15;
+                    g.pressure += diff;
+                    if(Math.random() > 0.85) {
+                        g.level = Math.max(20, Math.min(100, g.level + Math.floor((Math.random() - 0.5) * 3)));
+                    }
+                });
+            }
+
+            // Módulo 4 (Pressão)
+            if (apiConfigs[4].active) {
+                m4Rooms.forEach(r => {
+                    r.value += (Math.random() - 0.5) * 0.4;
+                });
+            }
+
+            // Módulo 5 (Ar)
+            if (apiConfigs[5].active) {
+                m5Air.forEach(a => {
+                    a.co2 += Math.floor((Math.random() - 0.5) * 10);
+                });
+            }
+
+            // Módulo 6 (Equipamentos Críticos)
+            if (apiConfigs[6].active) {
+                m6Vibe.forEach(v => {
+                    if(v.status !== "ALERTA") {
+                        v.vibe += (Math.random() - 0.5) * 0.1;
+                    }
+                });
+            }
+
+            // Módulo 7 (Osmose Reversa - Novo!)
+            if (apiConfigs[7].active) {
+                // Flutuações na condutividade (ideal < 2.0 uS/cm para diálise)
+                m7Osmose.conductivity = Math.max(0.5, m7Osmose.conductivity + (Math.random() - 0.5) * 0.08);
+                m7Osmose.flowPermeate = Math.max(300, Math.min(600, m7Osmose.flowPermeate + Math.floor((Math.random() - 0.5) * 12)));
+                m7Osmose.flowReject = Math.max(100, Math.min(250, m7Osmose.flowReject + Math.floor((Math.random() - 0.5) * 6)));
+                m7Osmose.temperature += (Math.random() - 0.5) * 0.15;
+                
+                // Simulação de acumulação real baseada na vazão de permeado (L/h) a cada ciclo de 4 segundos
+                // Ex: 450 litros por hora equivale a 0.125 litros por segundo (0.5 litros a cada ciclo de 4 segundos)
+                m7Osmose.waterProducedDay += (m7Osmose.flowPermeate / 3600) * 4;
+
+                if (m7Osmose.conductivity > 2.0) {
+                    m7Osmose.status = "CRÍTICO";
+                    showToast("ALERTA CRÍTICO: Condutividade da água de osmose ultrapassou 2.0 µS/cm!");
+                } else {
+                    m7Osmose.status = "OTIMIZADO";
+                }
+            }
+
+            recalculateMetrics();
+
+            // Se o overlay do Modo TV estiver ativo, renderizar os componentes de slide imediatamente
+            if(!document.getElementById("modo-tv-overlay").classList.contains("hidden")) {
+                drawTvSlide1Elements();
+                drawTvSlide2Elements();
+                drawTvSlide3Elements();
+                drawTvSlide4Elements();
+                drawTvSlide5Elements();
+                drawTvSlide6Elements();
+                drawTvSlide7Elements();
+            }
+        }
+
+        function drawTvSlide1Elements() {
+            const container = document.getElementById("tv-m1-container");
+            if (!container) return;
+            container.innerHTML = "";
+            m1Sensors.forEach(s => {
+                const isCritical = s.status === "CRÍTICO";
+                const borderClass = isCritical ? 'border-red-500/60 bg-red-950/20 glow-red' : 'border-slate-800 bg-slate-900/40';
+                
+                container.innerHTML += `
+                    <div class="p-5 rounded-2xl border ${borderClass} flex flex-col justify-between h-44">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-[9px] font-bold text-cyan-400 font-mono">${s.tag}</span>
+                                <h4 class="font-extrabold text-white text-xs mt-1 truncate max-w-[130px]">${s.name}</h4>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase ${isCritical ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
+                                ${s.status}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-[9px] text-slate-500 font-bold block">Limites:<br>${s.minRef}°C a ${s.maxRef}°C</span>
+                            <span class="text-3xl font-black text-white font-mono">${s.temp.toFixed(1)}°C</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function drawTvSlide2Elements() {
+            const container = document.getElementById("tv-m2-container");
+            if (!container) return;
+            container.innerHTML = "";
+            m2Gases.forEach(g => {
+                container.innerHTML += `
+                    <div class="p-5 rounded-2xl border border-slate-800 bg-slate-900/40 flex flex-col justify-between h-44">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-extrabold text-white text-xs truncate max-w-[150px]">${g.name}</h4>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[8px] font-bold uppercase">
+                                ${g.status}
+                            </span>
+                        </div>
+                        <div class="my-2">
+                            <div class="flex justify-between text-[9px] text-slate-500 font-bold uppercase mb-1">
+                                <span>Pressão</span>
+                                <span class="text-slate-300 font-mono">${g.pressure.toFixed(2)} ${g.unit}</span>
+                            </div>
+                            <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-blue-500 h-1.5 rounded-full" style="width: ${Math.min(100, Math.max(10, g.pressure * 15))}%"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-slate-950">
+                            <span class="text-[9px] text-slate-500 font-bold">Nível Tanque</span>
+                            <span class="text-xs font-black text-white font-mono">${g.level}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function drawTvSlide3Elements() {
+            const container = document.getElementById("tv-m3-container");
+            if (!container) return;
+            container.innerHTML = "";
+            m3Assets.forEach(a => {
+                container.innerHTML += `
+                    <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/30 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-850 text-teal-400">
+                                <i class="fa-solid fa-satellite-dish"></i>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono font-bold text-slate-500">${a.tag}</span>
+                                <h4 class="font-bold text-white text-xs">${a.type}</h4>
+                                <p class="text-[10px] text-slate-400"><i class="fa-solid fa-location-dot mr-1"></i> ${a.loc}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="px-2 py-0.5 rounded text-[8px] font-extrabold uppercase bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                                ${a.status}
+                            </span>
+                            <span class="text-[10px] font-bold text-slate-500 block mt-1.5"><i class="fa-solid fa-battery-three-quarters mr-1 text-slate-400"></i> ${a.battery}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function drawTvSlide4Elements() {
+            const container = document.getElementById("tv-m4-container");
+            if (!container) return;
+            container.innerHTML = "";
+            m4Rooms.forEach(r => {
+                container.innerHTML += `
+                    <div class="p-5 rounded-2xl border border-slate-800 bg-slate-900/40 flex items-center justify-between h-40">
+                        <div class="space-y-2">
+                            <div class="p-2 bg-slate-950 rounded-lg border border-slate-850 text-amber-400 w-fit">
+                                <i class="fa-solid ${r.icon}"></i>
+                            </div>
+                            <h4 class="font-extrabold text-white text-xs">${r.name}</h4>
+                            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[8px] font-black uppercase">
+                                ${r.status}
+                            </span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-4xl font-black text-white font-mono">${r.value.toFixed(1)}</span>
+                            <span class="text-xs font-bold text-slate-500 block uppercase tracking-wider">${r.unit}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function drawTvSlide5Elements() {
+            const container = document.getElementById("tv-m5-container");
+            if (!container) return;
+            container.innerHTML = "";
+            m5Air.forEach(a => {
+                container.innerHTML += `
+                    <div class="p-5 rounded-2xl border border-slate-800 bg-slate-900/40 space-y-3 h-44">
+                        <h4 class="font-extrabold text-white text-xs truncate border-b border-slate-950 pb-2">${a.name}</h4>
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                            <div>
+                                <span class="text-[9px] text-slate-500 font-bold block">PM2.5</span>
+                                <span class="text-sm font-black text-white font-mono">${a.pm25.toFixed(1)}</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-slate-500 font-bold block">PM10</span>
+                                <span class="text-sm font-black text-white font-mono">${a.pm10.toFixed(1)}</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-slate-500 font-bold block">CO₂</span>
+                                <span class="text-sm font-black text-pink-400 font-mono">${a.co2} ppm</span>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-950 flex justify-between items-center">
+                            <span class="text-[9px] text-slate-500 font-bold">Filtro HEPA</span>
+                            <span class="text-xs font-black text-emerald-400 font-mono">${a.filter}% Eficiência</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function drawTvSlide6Elements() {
+            const container = document.getElementById("tv-m6-container");
+            if (!container) return;
+            container.innerHTML = "";
+            m6Vibe.forEach(v => {
+                const isAlert = v.status === "ALERTA";
+                const borderClass = isAlert ? 'border-amber-500/60 bg-amber-950/10' : 'border-slate-800 bg-slate-900/30';
+                const textGlow = isAlert ? 'text-amber-400' : 'text-slate-400';
+                
+                container.innerHTML += `
+                    <div class="p-4 rounded-xl border ${borderClass} flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-white text-xs">${v.name}</h4>
+                            <span class="text-[9px] ${textGlow} font-semibold flex items-center mt-1">
+                                <i class="fa-solid fa-triangle-exclamation mr-1"></i> ${v.statusText}
+                            </span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-lg font-black text-white font-mono">${v.vibe.toFixed(2)}</span>
+                            <span class="text-[9px] text-slate-500 font-bold block uppercase">${v.unit}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Construtor visual de telemetria do Módulo 07 para o Modo TV
+        function drawTvSlide7Elements() {
+            const container = document.getElementById("tv-m7-container");
+            if (!container) return;
+            container.innerHTML = "";
+
+            const isCritical = m7Osmose.status === "CRÍTICO";
+            const condBorderClass = isCritical ? 'border-red-500 bg-red-950/20 glow-red' : 'border-slate-800 bg-slate-900/40';
+            const condTextColor = isCritical ? 'text-red-400' : 'text-cyan-400';
+
+            // Card 1: Condutividade (Métrica Primária)
+            container.innerHTML += `
+                <div class="p-5 rounded-2xl border ${condBorderClass} flex flex-col justify-between h-44">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[9px] font-mono font-bold text-slate-500">MÚLTIPLO SENSOR</span>
+                            <h4 class="font-extrabold text-white text-xs mt-1">Condutividade Água</h4>
+                        </div>
+                        <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase ${isCritical ? 'bg-red-500/10 text-red-400' : 'bg-cyan-500/10 text-cyan-400'}">
+                            ${m7Osmose.status}
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <span class="text-[9px] text-slate-500 font-bold block">Limite RDC 154:<br>&lt; 2.0 µS/cm</span>
+                        <span class="text-3xl font-black ${condTextColor} font-mono">${m7Osmose.conductivity.toFixed(2)} <span class="text-xs text-slate-400">µS</span></span>
+                    </div>
+                </div>
+            `;
+
+            // Card 2: Vazão Instantânea (L/h)
+            const efficiency = ((m7Osmose.flowPermeate / (m7Osmose.flowPermeate + m7Osmose.flowReject)) * 100).toFixed(0);
+            container.innerHTML += `
+                <div class="p-5 rounded-2xl border border-slate-800 bg-slate-900/40 flex flex-col justify-between h-44">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[9px] font-mono font-bold text-slate-500">VAZÃO DE PRODUÇÃO</span>
+                            <h4 class="font-extrabold text-white text-xs mt-1">Vazão Instantânea</h4>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[8px] font-bold">
+                            ${efficiency}% RECUPERAÇÃO
+                        </span>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-3xl font-black text-white font-mono">${m7Osmose.flowPermeate}</span>
+                            <span class="text-[10px] font-bold text-slate-400">L/h (Litros/Hora)</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-slate-500 font-medium">
+                            <span>Rejeito: ${m7Osmose.flowReject} L/h</span>
+                            <span>Total Entrada: ${m7Osmose.flowPermeate + m7Osmose.flowReject} L/h</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Card 3: Volume Diário Acumulado (Hoje em Litros)
+            container.innerHTML += `
+                <div class="p-5 rounded-2xl border border-slate-800 bg-slate-900/40 flex flex-col justify-between h-44">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[9px] font-mono font-bold text-slate-500">PRODUÇÃO ACUMULADA</span>
+                            <h4 class="font-extrabold text-white text-xs mt-1">Água Produzida (Dia)</h4>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[8px] font-bold uppercase">
+                            Hoje
+                        </span>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-3xl font-black text-cyan-400 font-mono">${Math.floor(m7Osmose.waterProducedDay).toLocaleString('pt-BR')}</span>
+                            <span class="text-[10px] font-bold text-slate-400">Litros</span>
+                        </div>
+                        <span class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider block">Estabilidade de Pressão</span>
+                    </div>
+                </div>
+            `;
+
+            // Card 4: Pressões de Membrana & Temperatura
+            container.innerHTML += `
+                <div class="p-5 rounded-2xl border border-slate-800 bg-slate-900/40 flex flex-col justify-between h-44">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[9px] font-mono font-bold text-slate-500">SENSORES TÉCNICOS</span>
+                            <h4 class="font-extrabold text-white text-xs mt-1">Pressão & Temperatura</h4>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[8px] font-bold">
+                            ${m7Osmose.temperature.toFixed(1)}°C
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-center my-1">
+                        <div class="bg-slate-950/40 p-1.5 rounded border border-slate-850">
+                            <span class="text-[8px] text-slate-500 font-bold block">ENTRADA</span>
+                            <span class="text-xs font-black font-mono text-slate-200">${m7Osmose.pressurePre.toFixed(1)} bar</span>
+                        </div>
+                        <div class="bg-slate-950/40 p-1.5 rounded border border-slate-850">
+                            <span class="text-[8px] text-slate-500 font-bold block">FILTRADO</span>
+                            <span class="text-xs font-black font-mono text-slate-200">${m7Osmose.pressurePost.toFixed(1)} bar</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function switchTab(tabId) {
+            const tabs = ['dashboard', 'ordens', 'config', 'api'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).className = "flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition-colors relative";
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            
+            // Destaque de aba selecionada
+            document.getElementById(`nav-${tabId}`).className = "flex items-center px-4 py-3 text-sm font-medium rounded-xl bg-slate-900 text-cyan-400 border border-slate-800 transition-colors relative";
+
+            const titleMap = {
+                'dashboard': 'Painel Geral Engenharia Clínica',
+                'ordens': 'Gerenciador de Ordens Ativas',
+                'config': 'Modulação e Sensores DROME IoT',
+                'api': 'Central de Conexão de APIs (Mapeamento)'
+            };
+            const subtitleMap = {
+                'dashboard': 'Gerenciador de ordens e integração de sensores IoT em tempo real',
+                'ordens': 'Acompanhamento de chamados e manutenções críticas',
+                'config': 'Ative os módulos físicos do DROME e configure a visualização do Modo TV',
+                'api': 'Defina cabeçalhos de autenticação, mapeamento de chaves JSON e teste seus links de rede'
+            };
+            document.getElementById("page-title").innerText = titleMap[tabId];
+            document.getElementById("page-subtitle").innerText = subtitleMap[tabId];
+        }
+
+        // Renderização da tabela de fila de chamados
+        function renderTable(list) {
+            const body = document.getElementById("os-table-body");
+            if (!body) return;
+            body.innerHTML = "";
+
+            list.forEach(o => {
+                const badgeStatus = o.status === 'CONCLUÍDO' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                                    o.status === 'EM PROGRESSO' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20';
+                
+                body.innerHTML += `
+                    <tr class="hover:bg-slate-900/40 transition-colors">
+                        <td class="py-3 px-4 font-bold text-slate-350 font-mono">${o.id}</td>
+                        <td class="py-3 px-4">
+                            <span class="font-semibold text-slate-200">${o.equipamento}</span>
+                        </td>
+                        <td class="py-3 px-4 text-slate-450">${o.setor}</td>
+                        <td class="py-3 px-4 text-slate-450">${o.tecnico}</td>
+                        <td class="py-3 px-4">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-850 border border-slate-800 text-slate-300">${o.classificacao}</span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <span class="px-2 py-0.5 rounded border text-[10px] font-bold ${badgeStatus}">${o.status}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        let currentFilterStatus = "TODOS";
+        function filterByStatus(status) {
+            currentFilterStatus = status;
+            const btnAll = document.getElementById("filter-all");
+            const btnOpen = document.getElementById("filter-open");
+            const btnProg = document.getElementById("filter-prog");
+
+            btnAll.className = "px-3 py-1.5 text-xs font-bold rounded " + (status === 'TODOS' ? 'bg-slate-800 text-slate-200' : 'bg-slate-950 text-slate-400 hover:text-white');
+            btnOpen.className = "px-3 py-1.5 text-xs font-bold rounded " + (status === 'ABERTO' ? 'bg-slate-800 text-slate-200' : 'bg-slate-950 text-slate-400 hover:text-white');
+            btnProg.className = "px-3 py-1.5 text-xs font-bold rounded " + (status === 'EM PROGRESSO' ? 'bg-slate-800 text-slate-200' : 'bg-slate-950 text-slate-400 hover:text-white');
+
+            renderGrid(ordensDeServico);
+        }
+
+        function renderGrid(list) {
+            const container = document.getElementById("orders-grid-container");
+            if (!container) return;
+            container.innerHTML = "";
+
+            const filtered = currentFilterStatus === "TODOS" ? list : list.filter(o => o.status === currentFilterStatus);
+
+            filtered.forEach(o => {
+                const borderClass = o.prioridade === 'Urgente' ? 'border-l-4 border-l-red-500' : 'border-l-4 border-l-cyan-500';
+                
+                container.innerHTML += `
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-850 flex flex-col justify-between space-y-4 ${borderClass}">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <span class="text-[9px] font-mono font-bold text-slate-500">${o.id}</span>
+                                <span class="text-[8px] font-black uppercase px-2 py-0.5 rounded ${o.prioridade === 'Urgente' ? 'bg-red-500/10 text-red-400 border border-red-500/20 animate-pulse' : 'bg-slate-850 text-slate-400'}">
+                                    ${o.prioridade}
+                                </span>
+                            </div>
+                            <h4 class="font-bold text-white text-xs mt-2">${o.equipamento}</h4>
+                            <p class="text-[11px] text-slate-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i> ${o.setor}</p>
+                        </div>
+                        <div class="pt-3 border-t border-slate-850/50 flex justify-between items-center text-[10px]">
+                            <span class="text-slate-500">Técnico: <strong class="text-slate-300 font-semibold">${o.tecnico}</strong></span>
+                            <span class="px-2 py-0.5 bg-slate-950 text-slate-300 rounded font-bold">${o.status}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterOrders() {
+            const query = document.getElementById("search-os").value.toLowerCase();
+            const filtered = ordensDeServico.filter(o => 
+                o.equipamento.toLowerCase().includes(query) ||
+                o.id.toLowerCase().includes(query) ||
+                o.setor.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
+        }
+
+        function openNewOrderModal() {
+            document.getElementById("new-order-modal").classList.remove("hidden");
+        }
+        function closeNewOrderModal() {
+            document.getElementById("new-order-modal").classList.add("hidden");
+        }
+
+        function submitNewOrder(e) {
+            e.preventDefault();
+            const id = `OS-2026-00${ordensDeServico.length + 1}`;
+            const eq = document.getElementById("form-equipamento").value;
+            const set = document.getElementById("form-setor").value;
+            const cls = document.getElementById("form-classificacao").value;
+            const tec = document.getElementById("form-tecnico").value;
+            const pri = document.getElementById("form-prioridade").value;
+
+            const newOS = { id, equipamento: eq, setor: set, tecnico: tec, classificacao: cls, status: "ABERTO", prioridade: pri, data: "19/07/2026" };
+            ordensDeServico.unshift(newOS);
+            closeNewOrderModal();
+            showToast(`Ordem ${id} gerada com sucesso.`);
+            recalculateMetrics();
+            renderTable(ordensDeServico);
+            renderGrid(ordensDeServico);
+            initDashboardCharts();
+        }
+
+        // Bullets de paginação inferior do Modo TV
+        function drawTvBullets() {
+            const container = document.getElementById("tv-carousel-indicators-bullets");
+            if (!container) return;
+            container.innerHTML = "";
+            activeTvSlides.forEach((slideId, index) => {
+                const isActive = index === currentActiveSlideIdx;
+                const activeClass = isActive ? 'bg-cyan-400 w-4' : 'bg-slate-700 w-1.5';
+                container.innerHTML += `
+                    <span class="h-1.5 rounded-full transition-all duration-300 ${activeClass}"></span>
+                `;
+            });
+        }
+
+        // Transição e renderização do slide selecionado no Modo TV
+        function showTvSlideByIdx(index) {
+            if(index < 0 || index >= activeTvSlides.length) index = 0;
+            currentActiveSlideIdx = index;
+            
+            const slideId = activeTvSlides[index];
+
+            // Esconder todos os slides
+            for(let i = 0; i <= 7; i++) {
+                const slideEl = document.getElementById(`tv-slide-${i}`);
+                if (slideEl) {
+                    slideEl.classList.add("hidden", "opacity-0");
+                }
+            }
+
+            // Exibir slide selecionado
+            const activeSlideEl = document.getElementById(`tv-slide-${slideId}`);
+            if(activeSlideEl) {
+                activeSlideEl.classList.remove("hidden");
+                setTimeout(() => {
+                    activeSlideEl.classList.remove("opacity-0");
+                }, 30);
+            }
+
+            // Descrição do próximo slide no rodapé
+            const nextIdx = (index + 1) % activeTvSlides.length;
+            const nextSlideId = activeTvSlides[nextIdx];
+            let nextText = "Painel Geral";
+            
+            if(nextSlideId > 0) {
+                const mod = dromeModules.find(m => m.id === nextSlideId);
+                if(mod) nextText = `${mod.nextLabel}`;
+            }
+            document.getElementById("tv-next-slide-info").innerText = `PRÓXIMO: ${nextText}`.toUpperCase();
+
+            // Atualizar telemetrias correspondentes ao carrossel
+            if (slideId === 0) {
+                setTimeout(initTvCharts, 100);
+            } else if (slideId === 1) {
+                drawTvSlide1Elements();
+            } else if (slideId === 2) {
+                drawTvSlide2Elements();
+            } else if (slideId === 3) {
+                drawTvSlide3Elements();
+            } else if (slideId === 4) {
+                drawTvSlide4Elements();
+            } else if (slideId === 5) {
+                drawTvSlide5Elements();
+            } else if (slideId === 6) {
+                drawTvSlide6Elements();
+            } else if (slideId === 7) {
+                drawTvSlide7Elements();
+            }
+
+            drawTvBullets();
+        }
+
+        function openTvMode() {
+            document.getElementById("modo-tv-overlay").classList.remove("hidden");
+            document.body.style.overflow = "hidden"; // Desativa rolagem em segundo plano
+            
+            buildActiveSlidesList();
+            currentActiveSlideIdx = 0;
+            tvProgressValue = 0;
+            isTvCarouselPlaying = true;
+            document.getElementById("tv-btn-play-pause").innerHTML = '<i class="fa-solid fa-pause"></i>';
+
+            showTvSlideByIdx(0);
+            startTvIntervals();
+            recalculateMetrics();
+        }
+
+        function closeTvMode() {
+            document.getElementById("modo-tv-overlay").classList.add("hidden");
+            document.body.style.overflow = "";
+            clearInterval(tvCarouselInterval);
+            clearInterval(tvProgressInterval);
+        }
+
+        // Loop de progresso e transição de slides (10 segundos)
+        function startTvIntervals() {
+            clearInterval(tvCarouselInterval);
+            clearInterval(tvProgressInterval);
+
+            const intervalStepTime = 100; // atualiza barra a cada 100ms
+            const totalSteps = TV_SLIDE_DURATION / intervalStepTime;
+
+            tvProgressInterval = setInterval(() => {
+                if(isTvCarouselPlaying) {
+                    tvProgressValue += (100 / totalSteps);
+                    document.getElementById("tv-carousel-progress").style.width = `${tvProgressValue}%`;
+                    
+                    const secondsLeft = Math.ceil(((100 - tvProgressValue) / 100) * (TV_SLIDE_DURATION / 1000));
+                    document.getElementById("tv-carousel-timer").innerText = `${secondsLeft}s`;
+
+                    if(tvProgressValue >= 100) {
+                        tvProgressValue = 0;
+                        nextTvSlide();
+                    }
+                }
+            }, intervalStepTime);
+        }
+
+        function nextTvSlide() {
+            tvProgressValue = 0;
+            const nextIdx = (currentActiveSlideIdx + 1) % activeTvSlides.length;
+            showTvSlideByIdx(nextIdx);
+        }
+
+        function prevTvSlide() {
+            tvProgressValue = 0;
+            const prevIdx = (currentActiveSlideIdx - 1 + activeTvSlides.length) % activeTvSlides.length;
+            showTvSlideByIdx(prevIdx);
+        }
+
+        function toggleTvPlayPause() {
+            isTvCarouselPlaying = !isTvCarouselPlaying;
+            const btn = document.getElementById("tv-btn-play-pause");
+            if (isTvCarouselPlaying) {
+                btn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                showToast("Modo carrossel retomado.");
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-play"></i>';
+                showToast("Modo carrossel pausado.");
+            }
+        }
+
+        function toggleTvSettingsMenu() {
+            const menu = document.getElementById("tv-settings-overlay-menu");
+            menu.classList.toggle("hidden");
+            if(!menu.classList.contains("hidden")) {
+                buildModulesToggles();
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("-translate-x-full");
+        }
+
+        // Emissor de notificações flutuantes na tela (Toasts)
+        function showToast(message) {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = "bg-slate-900 text-white px-4 py-3 rounded-lg border border-slate-800 flex items-center space-x-2.5 text-xs shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0";
+            toast.innerHTML = `
+                <i class="fa-solid fa-bell text-cyan-400 animate-bounce"></i>
+                <span class="font-medium">${message}</span>
+            `;
+            container.appendChild(toast);
+            
+            // Forçar reflow para animação de slide
+            setTimeout(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add("opacity-0", "translate-y-2");
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        function updateTvClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR');
+            const dateStr = now.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            const clockEl = document.getElementById("tv-clock");
+            const dateEl = document.getElementById("tv-date");
+
+            if (clockEl) clockEl.innerText = timeStr;
+            if (dateEl) dateEl.innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        }
+    </script>
+</body>
+</html>

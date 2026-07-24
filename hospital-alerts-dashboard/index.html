@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioAlert - Gestão e Alerta de Ordens de Serviço</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <i class="fa-solid fa-heart-pulse logo-icon"></i>
+                <h2>BioAlert</h2>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="#" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="#" id="btnSimulate"><i class="fa-solid fa-plus-circle"></i> Forçar Nova OS</a>
+                <a href="#" id="btnRunScraper"><i class="fa-solid fa-arrows-rotate"></i> Varrer Portal</a>
+                <a href="#logs"><i class="fa-solid fa-paper-plane"></i> Histórico WhatsApp</a>
+            </nav>
+            
+            <div class="status-panel">
+                <div class="status-item">
+                    <span class="status-dot online"></span>
+                    <span class="status-text">Scraper: Ativo</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot online" id="serverStatusDot"></span>
+                    <span class="status-text">Conexão: OK</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1>Painel de Engenharia Clínica</h1>
+                    <p>Monitoramento em tempo real de Ordens de Serviço (OS) do Hospital</p>
+                </div>
+                <div class="time-widget">
+                    <span id="currentDate">--/--/----</span>
+                    <span id="currentTime">--:--:--</span>
+                </div>
+            </header>
+
+            <!-- Metrics Cards Grid -->
+            <section class="metrics-grid">
+                <div class="card card-total">
+                    <div class="card-icon"><i class="fa-solid fa-file-medical"></i></div>
+                    <div class="card-info">
+                        <h3>Total de OS</h3>
+                        <p id="metricTotal">0</p>
+                    </div>
+                </div>
+                <div class="card card-pending">
+                    <div class="card-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <div class="card-info">
+                        <h3>Pendentes</h3>
+                        <p id="metricPending">0</p>
+                    </div>
+                </div>
+                <div class="card card-critical">
+                    <div class="card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="card-info">
+                        <h3>Urgência ALTA</h3>
+                        <p id="metricCritical">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Alerts System -->
+            <section class="alert-banner-section" id="activeAlertBanner" style="display: none;">
+                <div class="alert-banner">
+                    <div class="alert-icon-container pulsing">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div class="alert-banner-content">
+                        <h3>Novo Alerta de Serviço Pendente!</h3>
+                        <p id="alertBannerText">OS-2026-1044 no Centro Cirúrgico necessita de atenção imediata.</p>
+                    </div>
+                    <button class="btn-dismiss" onclick="dismissAlert()">Reconhecer Alerta</button>
+                </div>
+            </section>
+
+            <!-- Grid Layout for Tables & Logs -->
+            <div class="dashboard-grid">
+                <!-- OS Table Section -->
+                <div class="panel table-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-list-check"></i> Lista de Ordens de Serviço Recentes</h2>
+                        <div class="panel-actions">
+                            <span class="badge badge-refresh" id="lastUpdatedTime">Atualizado: Agora</span>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="osMainTable">
+                            <thead>
+                                <tr>
+                                    <th>Nº OS</th>
+                                    <th>Setor</th>
+                                    <th>Equipamento</th>
+                                    <th>Problema</th>
+                                    <th>Abertura</th>
+                                    <th>Urgência</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dinamicamente alimentado pelo JS -->
+                                <tr>
+                                    <td colspan="7" class="loading-cell">Carregando dados do portal hospitalar...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Logs Section -->
+                <div class="panel logs-panel" id="logs">
+                    <div class="panel-header">
+                        <h2><i class="fa-brands fa-whatsapp"></i> Registro de Notificações Celular</h2>
+                    </div>
+                    <div class="log-list" id="whatsappLogList">
+                        <!-- Dinamicamente alimentado pelo JS -->
+                        <div class="log-empty">Nenhum alerta disparado nesta sessão.</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Hidden audio element for alerts -->
+    <audio id="alertSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-84.wav" preload="auto"></audio>
+
+    <script src="app.js"></script>
+</body>
+</html>

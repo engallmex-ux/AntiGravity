@@ -1,0 +1,12 @@
+{
+  "target_url": "https://gets.ceb.unicamp.br/nec/",
+  "max_pages": 5,
+  "login": {
+    "url": "https://gets.ceb.unicamp.br/nec/",
+    "username_selector": "input[name='j_username']",
+    "password_selector": "input[name='j_password']",
+    "submit_selector": "input[type='submit'][value='Entrar']",
+    "username": "lucas.fonseca.4@hubrasil.gov.br",
+    "password": "140921"
+  }
+}

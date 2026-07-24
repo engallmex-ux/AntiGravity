@@ -1,0 +1,11 @@
+{
+  "name": "OrbisTracker HU-BR",
+  "description": "OrbisTracker HU-Brasil: Precisão que transforma horas de auditoria em segundos de ação. Substitui pranchetas manuais de engenharia clínica por um sistema de auditoria inteligente.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

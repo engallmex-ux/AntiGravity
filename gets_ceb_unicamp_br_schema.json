@@ -1,0 +1,482 @@
+[
+  {
+    "url": "https://gets.ceb.unicamp.br/nec/",
+    "titulo": "GETS - Gerenciamento de Tecnologia para Saúde",
+    "mecanismos_busca": [],
+    "menus_navegacao": [
+      {
+        "texto": "GETS",
+        "url": "https://gets.ceb.unicamp.br/nec/",
+        "href_original": "#"
+      },
+      {
+        "texto": "(alterar senha)",
+        "url": "https://gets.ceb.unicamp.br/usuario/alterarsenha.jsf",
+        "href_original": "../usuario/alterarsenha.jsf"
+      },
+      {
+        "texto": "Página Inicial",
+        "url": "https://gets.ceb.unicamp.br/inicio/home.jsf",
+        "href_original": "../inicio/home.jsf"
+      },
+      {
+        "texto": "Pendências",
+        "url": "https://gets.ceb.unicamp.br/menus/pendencias.jsf",
+        "href_original": "../menus/pendencias.jsf"
+      },
+      {
+        "texto": "Solicitações",
+        "url": "https://gets.ceb.unicamp.br/menus/solicitacoes.jsf",
+        "href_original": "../menus/solicitacoes.jsf"
+      },
+      {
+        "texto": "Cadastros",
+        "url": "https://gets.ceb.unicamp.br/menus/cadastros.jsf",
+        "href_original": "../menus/cadastros.jsf"
+      },
+      {
+        "texto": "Consultas",
+        "url": "https://gets.ceb.unicamp.br/menus/consultas.jsf",
+        "href_original": "../menus/consultas.jsf"
+      },
+      {
+        "texto": "Relatórios",
+        "url": "https://gets.ceb.unicamp.br/menus/relatorios.jsf",
+        "href_original": "../menus/relatorios.jsf"
+      },
+      {
+        "texto": "Materiais",
+        "url": "https://gets.ceb.unicamp.br/menus/materiais.jsf",
+        "href_original": "../menus/materiais.jsf"
+      },
+      {
+        "texto": "Gestão",
+        "url": "https://gets.ceb.unicamp.br/gestao/consulta.jsf",
+        "href_original": "../gestao/consulta.jsf"
+      },
+      {
+        "texto": "Sair",
+        "url": "https://gets.ceb.unicamp.br/logout",
+        "href_original": "../../logout"
+      },
+      {
+        "texto": "Ajuda",
+        "url": "https://gets.ceb.unicamp.br/ajuda/ajuda.jsf",
+        "href_original": "../ajuda/ajuda.jsf"
+      }
+    ],
+    "formularios": [
+      {
+        "id": "j_idt10",
+        "action": "/nec/view/inicio/index.jsf",
+        "method": "post",
+        "campos": [
+          {
+            "id": "",
+            "name": "j_idt10",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input[name='j_idt10']"
+          },
+          {
+            "id": "javax.faces.ViewState",
+            "name": "javax.faces.ViewState",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input#javax.faces.ViewState"
+          }
+        ],
+        "botoes": []
+      }
+    ],
+    "botoes_soltos": []
+  },
+  {
+    "url": "https://gets.ceb.unicamp.br/nec/",
+    "titulo": "GETS - Gerenciamento de Tecnologia para Saúde",
+    "mecanismos_busca": [],
+    "menus_navegacao": [
+      {
+        "texto": "GETS",
+        "url": "https://gets.ceb.unicamp.br/nec/",
+        "href_original": "#"
+      },
+      {
+        "texto": "(alterar senha)",
+        "url": "https://gets.ceb.unicamp.br/usuario/alterarsenha.jsf",
+        "href_original": "../usuario/alterarsenha.jsf"
+      },
+      {
+        "texto": "Página Inicial",
+        "url": "https://gets.ceb.unicamp.br/inicio/home.jsf",
+        "href_original": "../inicio/home.jsf"
+      },
+      {
+        "texto": "Pendências",
+        "url": "https://gets.ceb.unicamp.br/menus/pendencias.jsf",
+        "href_original": "../menus/pendencias.jsf"
+      },
+      {
+        "texto": "Solicitações",
+        "url": "https://gets.ceb.unicamp.br/menus/solicitacoes.jsf",
+        "href_original": "../menus/solicitacoes.jsf"
+      },
+      {
+        "texto": "Cadastros",
+        "url": "https://gets.ceb.unicamp.br/menus/cadastros.jsf",
+        "href_original": "../menus/cadastros.jsf"
+      },
+      {
+        "texto": "Consultas",
+        "url": "https://gets.ceb.unicamp.br/menus/consultas.jsf",
+        "href_original": "../menus/consultas.jsf"
+      },
+      {
+        "texto": "Relatórios",
+        "url": "https://gets.ceb.unicamp.br/menus/relatorios.jsf",
+        "href_original": "../menus/relatorios.jsf"
+      },
+      {
+        "texto": "Materiais",
+        "url": "https://gets.ceb.unicamp.br/menus/materiais.jsf",
+        "href_original": "../menus/materiais.jsf"
+      },
+      {
+        "texto": "Gestão",
+        "url": "https://gets.ceb.unicamp.br/gestao/consulta.jsf",
+        "href_original": "../gestao/consulta.jsf"
+      },
+      {
+        "texto": "Sair",
+        "url": "https://gets.ceb.unicamp.br/logout",
+        "href_original": "../../logout"
+      },
+      {
+        "texto": "Ajuda",
+        "url": "https://gets.ceb.unicamp.br/ajuda/ajuda.jsf",
+        "href_original": "../ajuda/ajuda.jsf"
+      }
+    ],
+    "formularios": [
+      {
+        "id": "j_idt10",
+        "action": "/nec/view/inicio/index.jsf",
+        "method": "post",
+        "campos": [
+          {
+            "id": "",
+            "name": "j_idt10",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input[name='j_idt10']"
+          },
+          {
+            "id": "javax.faces.ViewState",
+            "name": "javax.faces.ViewState",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input#javax.faces.ViewState"
+          }
+        ],
+        "botoes": []
+      }
+    ],
+    "botoes_soltos": []
+  },
+  {
+    "url": "https://gets.ceb.unicamp.br/usuario/alterarsenha.jsf",
+    "titulo": "GETS - Gerenciamento de Tecnologia para Saúde",
+    "mecanismos_busca": [],
+    "menus_navegacao": [
+      {
+        "texto": "GETS",
+        "url": "https://gets.ceb.unicamp.br/usuario/alterarsenha.jsf",
+        "href_original": "#"
+      },
+      {
+        "texto": "(alterar senha)",
+        "url": "https://gets.ceb.unicamp.br/usuario/alterarsenha.jsf",
+        "href_original": "../usuario/alterarsenha.jsf"
+      },
+      {
+        "texto": "Página Inicial",
+        "url": "https://gets.ceb.unicamp.br/inicio/home.jsf",
+        "href_original": "../inicio/home.jsf"
+      },
+      {
+        "texto": "Pendências",
+        "url": "https://gets.ceb.unicamp.br/menus/pendencias.jsf",
+        "href_original": "../menus/pendencias.jsf"
+      },
+      {
+        "texto": "Solicitações",
+        "url": "https://gets.ceb.unicamp.br/menus/solicitacoes.jsf",
+        "href_original": "../menus/solicitacoes.jsf"
+      },
+      {
+        "texto": "Cadastros",
+        "url": "https://gets.ceb.unicamp.br/menus/cadastros.jsf",
+        "href_original": "../menus/cadastros.jsf"
+      },
+      {
+        "texto": "Consultas",
+        "url": "https://gets.ceb.unicamp.br/menus/consultas.jsf",
+        "href_original": "../menus/consultas.jsf"
+      },
+      {
+        "texto": "Relatórios",
+        "url": "https://gets.ceb.unicamp.br/menus/relatorios.jsf",
+        "href_original": "../menus/relatorios.jsf"
+      },
+      {
+        "texto": "Materiais",
+        "url": "https://gets.ceb.unicamp.br/menus/materiais.jsf",
+        "href_original": "../menus/materiais.jsf"
+      },
+      {
+        "texto": "Gestão",
+        "url": "https://gets.ceb.unicamp.br/gestao/consulta.jsf",
+        "href_original": "../gestao/consulta.jsf"
+      },
+      {
+        "texto": "Sair",
+        "url": "https://gets.ceb.unicamp.br/logout",
+        "href_original": "../../logout"
+      },
+      {
+        "texto": "Ajuda",
+        "url": "https://gets.ceb.unicamp.br/ajuda/ajuda.jsf",
+        "href_original": "../ajuda/ajuda.jsf"
+      }
+    ],
+    "formularios": [
+      {
+        "id": "j_idt10",
+        "action": "/nec/view/inicio/index.jsf",
+        "method": "post",
+        "campos": [
+          {
+            "id": "",
+            "name": "j_idt10",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input[name='j_idt10']"
+          },
+          {
+            "id": "javax.faces.ViewState",
+            "name": "javax.faces.ViewState",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input#javax.faces.ViewState"
+          }
+        ],
+        "botoes": []
+      }
+    ],
+    "botoes_soltos": []
+  },
+  {
+    "url": "https://gets.ceb.unicamp.br/inicio/home.jsf",
+    "titulo": "GETS - Gerenciamento de Tecnologia para Saúde",
+    "mecanismos_busca": [],
+    "menus_navegacao": [
+      {
+        "texto": "GETS",
+        "url": "https://gets.ceb.unicamp.br/inicio/home.jsf",
+        "href_original": "#"
+      },
+      {
+        "texto": "(alterar senha)",
+        "url": "https://gets.ceb.unicamp.br/usuario/alterarsenha.jsf",
+        "href_original": "../usuario/alterarsenha.jsf"
+      },
+      {
+        "texto": "Página Inicial",
+        "url": "https://gets.ceb.unicamp.br/inicio/home.jsf",
+        "href_original": "../inicio/home.jsf"
+      },
+      {
+        "texto": "Pendências",
+        "url": "https://gets.ceb.unicamp.br/menus/pendencias.jsf",
+        "href_original": "../menus/pendencias.jsf"
+      },
+      {
+        "texto": "Solicitações",
+        "url": "https://gets.ceb.unicamp.br/menus/solicitacoes.jsf",
+        "href_original": "../menus/solicitacoes.jsf"
+      },
+      {
+        "texto": "Cadastros",
+        "url": "https://gets.ceb.unicamp.br/menus/cadastros.jsf",
+        "href_original": "../menus/cadastros.jsf"
+      },
+      {
+        "texto": "Consultas",
+        "url": "https://gets.ceb.unicamp.br/menus/consultas.jsf",
+        "href_original": "../menus/consultas.jsf"
+      },
+      {
+        "texto": "Relatórios",
+        "url": "https://gets.ceb.unicamp.br/menus/relatorios.jsf",
+        "href_original": "../menus/relatorios.jsf"
+      },
+      {
+        "texto": "Materiais",
+        "url": "https://gets.ceb.unicamp.br/menus/materiais.jsf",
+        "href_original": "../menus/materiais.jsf"
+      },
+      {
+        "texto": "Gestão",
+        "url": "https://gets.ceb.unicamp.br/gestao/consulta.jsf",
+        "href_original": "../gestao/consulta.jsf"
+      },
+      {
+        "texto": "Sair",
+        "url": "https://gets.ceb.unicamp.br/logout",
+        "href_original": "../../logout"
+      },
+      {
+        "texto": "Ajuda",
+        "url": "https://gets.ceb.unicamp.br/ajuda/ajuda.jsf",
+        "href_original": "../ajuda/ajuda.jsf"
+      }
+    ],
+    "formularios": [
+      {
+        "id": "j_idt10",
+        "action": "/nec/view/inicio/index.jsf",
+        "method": "post",
+        "campos": [
+          {
+            "id": "",
+            "name": "j_idt10",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input[name='j_idt10']"
+          },
+          {
+            "id": "javax.faces.ViewState",
+            "name": "javax.faces.ViewState",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input#javax.faces.ViewState"
+          }
+        ],
+        "botoes": []
+      }
+    ],
+    "botoes_soltos": []
+  },
+  {
+    "url": "https://gets.ceb.unicamp.br/menus/pendencias.jsf",
+    "titulo": "GETS - Gerenciamento de Tecnologia para Saúde",
+    "mecanismos_busca": [],
+    "menus_navegacao": [
+      {
+        "texto": "GETS",
+        "url": "https://gets.ceb.unicamp.br/menus/pendencias.jsf",
+        "href_original": "#"
+      },
+      {
+        "texto": "(alterar senha)",
+        "url": "https://gets.ceb.unicamp.br/usuario/alterarsenha.jsf",
+        "href_original": "../usuario/alterarsenha.jsf"
+      },
+      {
+        "texto": "Página Inicial",
+        "url": "https://gets.ceb.unicamp.br/inicio/home.jsf",
+        "href_original": "../inicio/home.jsf"
+      },
+      {
+        "texto": "Pendências",
+        "url": "https://gets.ceb.unicamp.br/menus/pendencias.jsf",
+        "href_original": "../menus/pendencias.jsf"
+      },
+      {
+        "texto": "Solicitações",
+        "url": "https://gets.ceb.unicamp.br/menus/solicitacoes.jsf",
+        "href_original": "../menus/solicitacoes.jsf"
+      },
+      {
+        "texto": "Cadastros",
+        "url": "https://gets.ceb.unicamp.br/menus/cadastros.jsf",
+        "href_original": "../menus/cadastros.jsf"
+      },
+      {
+        "texto": "Consultas",
+        "url": "https://gets.ceb.unicamp.br/menus/consultas.jsf",
+        "href_original": "../menus/consultas.jsf"
+      },
+      {
+        "texto": "Relatórios",
+        "url": "https://gets.ceb.unicamp.br/menus/relatorios.jsf",
+        "href_original": "../menus/relatorios.jsf"
+      },
+      {
+        "texto": "Materiais",
+        "url": "https://gets.ceb.unicamp.br/menus/materiais.jsf",
+        "href_original": "../menus/materiais.jsf"
+      },
+      {
+        "texto": "Gestão",
+        "url": "https://gets.ceb.unicamp.br/gestao/consulta.jsf",
+        "href_original": "../gestao/consulta.jsf"
+      },
+      {
+        "texto": "Sair",
+        "url": "https://gets.ceb.unicamp.br/logout",
+        "href_original": "../../logout"
+      },
+      {
+        "texto": "Ajuda",
+        "url": "https://gets.ceb.unicamp.br/ajuda/ajuda.jsf",
+        "href_original": "../ajuda/ajuda.jsf"
+      }
+    ],
+    "formularios": [
+      {
+        "id": "j_idt10",
+        "action": "/nec/view/inicio/index.jsf",
+        "method": "post",
+        "campos": [
+          {
+            "id": "",
+            "name": "j_idt10",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input[name='j_idt10']"
+          },
+          {
+            "id": "javax.faces.ViewState",
+            "name": "javax.faces.ViewState",
+            "tipo": "hidden",
+            "label": "",
+            "placeholder": "",
+            "opcoes": null,
+            "selector": "input#javax.faces.ViewState"
+          }
+        ],
+        "botoes": []
+      }
+    ],
+    "botoes_soltos": []
+  }
+]

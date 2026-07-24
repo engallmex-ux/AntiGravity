@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CliniReport — Gerador de Relatórios de Engenharia Clínica</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Style Sheets -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header no-print">
+        <div class="header-logo">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM10.5 17H13.5V13.5H17V10.5H13.5V7H10.5V10.5H7V13.5H10.5V17Z" fill="currentColor"/>
+            </svg>
+            <div class="logo-text">
+                <h1>CliniReport</h1>
+                <span>Engenharia Clínica & Rastreabilidade</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button id="btn-history" class="btn btn-secondary">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Histórico
+            </button>
+            <button id="btn-print" class="btn btn-primary">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Gerar PDF / Imprimir
+            </button>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- FORMULARIO DE ENTRADA -->
+        <section class="form-panel no-print">
+            <!-- Tabs de Navegação -->
+            <div class="form-tabs">
+                <button class="tab-link active" data-tab="tab-client">1. Identificação</button>
+                <button class="tab-link" data-tab="tab-asset">2. Ativo</button>
+                <button class="tab-link" data-tab="tab-analysis">3. Análise</button>
+                <button class="tab-link" data-tab="tab-tests">4. Ensaios</button>
+                <button class="tab-link" data-tab="tab-photos">5. Evidências</button>
+                <button class="tab-link" data-tab="tab-validation">6. Conclusão</button>
+            </div>
+
+            <!-- Conteúdo das Tabs -->
+            <div class="tab-content active" id="tab-client">
+                <h2>Cabeçalho e Identificação</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="input-doc-id">ID do Documento (REF-ANO-NUMERO)</label>
+                        <div class="input-with-button">
+                            <input type="text" id="input-doc-id" placeholder="REF-2026-0001">
+                            <button id="btn-generate-id" class="btn-inline" type="button">Gerar Novo ID</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-client-name">Nome do Cliente / Instituição *</label>
+                        <input type="text" id="input-client-name" placeholder="Ex: Hospital das Clínicas" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-client-cnpj">CNPJ</label>
+                        <input type="text" id="input-client-cnpj" placeholder="00.000.000/0000-00">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-client-sector">Local / Setor</label>
+                        <input type="text" id="input-client-sector" placeholder="Ex: UTI Adulto, Pesquisa Clínica">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-logo-upload">Logotipo da Instituição/Empresa</label>
+                        <div class="file-drop-zone">
+                            <input type="file" id="input-logo-upload" accept="image/*">
+                            <div class="drop-zone-text">Clique ou arraste o logo aqui</div>
+                        </div>
+                        <button type="button" id="btn-clear-logo" class="btn-text-danger hidden">Remover Logo</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-asset">
+                <h2>Identificação do Ativo</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width autocomplete-container">
+                        <label for="input-asset-name">Equipamento (Ex: Ultrassom Odontológico) *</label>
+                        <input type="text" id="input-asset-name" placeholder="Pesquise ou digite o nome do equipamento..." required autocomplete="off">
+                        <div id="autocomplete-list" class="autocomplete-items"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-asset-brand">Fabricante / Marca</label>
+                        <input type="text" id="input-asset-brand" placeholder="Ex: Microdont">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-asset-model">Modelo Técnico</label>
+                        <input type="text" id="input-asset-model" placeholder="Ex: Advance View">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-asset-serial">Número de Série (S/N)</label>
+                        <input type="text" id="input-asset-serial" placeholder="Ex: SN123456789">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-asset-patrimony">Nº de Patrimônio (Plaqueta)</label>
+                        <input type="text" id="input-asset-patrimony" placeholder="Ex: PAT-98765">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Coordenadas Geográficas (GPS)</label>
+                        <div class="input-with-button">
+                            <input type="text" id="input-asset-gps" placeholder="Aguardando localização..." readonly>
+                            <button id="btn-get-gps" class="btn-inline" type="button">
+                                <svg class="btn-icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 00-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 00-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Obter GPS
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-analysis">
+                <h2>Análise Técnica e Ocorrência</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="input-analysis-subject">Assunto / Tipo de Intervenção *</label>
+                        <input type="text" id="input-analysis-subject" placeholder="Ex: Manutenção Corretiva, Calibração, Inspeção de Segurança" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="input-analysis-occurrence">Ocorrência / Defeito Informado</label>
+                        <textarea id="input-analysis-occurrence" rows="3" placeholder="Descrição do problema relatado pelo cliente..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="input-analysis-diagnosis">Diagnóstico Técnico</label>
+                        <textarea id="input-analysis-diagnosis" rows="4" placeholder="Descrição detalhada dos achados técnicos (ex: oxidação, obstruções, desgaste mecânico)..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="input-analysis-procedures">Procedimentos Realizados</label>
+                        <textarea id="input-analysis-procedures" rows="4" placeholder="Lista detalhada dos serviços executados (ex: limpeza, desentupimento, calibração, troca de componentes)..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-tests">
+                <h2>Resultados e Controle Metrológico</h2>
+                
+                <!-- Tabela dinâmica de Ensaios -->
+                <div class="table-section">
+                    <div class="table-section-header">
+                        <h3>Tabela de Ensaios / Testes</h3>
+                        <button type="button" id="btn-add-test" class="btn btn-secondary btn-small">
+                            + Adicionar Teste
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="table-tests-inputs">
+                            <thead>
+                                <tr>
+                                    <th>Inspeção Realizada</th>
+                                    <th>Status</th>
+                                    <th>Responsável</th>
+                                    <th>Validade</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dinâmico via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="form-divider">
+
+                <h3>Condições Ambientais / Técnicas</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="input-env-temp">Temperatura (°C)</label>
+                        <input type="text" id="input-env-temp" placeholder="Ex: 22.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-env-humidity">Umidade Relativa (%)</label>
+                        <input type="text" id="input-env-humidity" placeholder="Ex: 55">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-env-pressure">Pressão Atmosférica (hPa)</label>
+                        <input type="text" id="input-env-pressure" placeholder="Ex: 1013">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-env-tension">Tensão de Alimentação (V)</label>
+                        <input type="text" id="input-env-tension" placeholder="Ex: 220">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-photos">
+                <h2>Evidências Fotográficas</h2>
+                <p class="tab-subtitle">Insira imagens de antes/depois, componentes desgastados ou falhas encontradas.</p>
+                
+                <div class="photo-upload-container">
+                    <div class="file-drop-zone photo-drop-zone" id="photo-drag-zone">
+                        <input type="file" id="input-photos-upload" accept="image/*" multiple>
+                        <div class="drop-zone-text">
+                            <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                            Arraste múltiplas fotos aqui ou clique para selecionar
+                        </div>
+                    </div>
+                </div>
+
+                <div id="photos-preview-container" class="photos-preview-grid">
+                    <!-- Cards de foto dinâmicos via JS com campo de legenda -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-validation">
+                <h2>Conclusão e Validação</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="input-val-conclusion">Parecer Técnico *</label>
+                        <textarea id="input-val-conclusion" rows="3" placeholder="Parecer conclusivo sobre as condições do equipamento..." required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="input-val-recommendations">Recomendações</label>
+                        <textarea id="input-val-recommendations" rows="3" placeholder="Ações futuras recomendadas (ex: substituição de peças, nova calibração, troca de insumos)..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-val-tech-name">Nome do Técnico / Auditor *</label>
+                        <input type="text" id="input-val-tech-name" placeholder="Nome completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-val-tech-reg">Registro Profissional (Ex: CREA/CFT)</label>
+                        <input type="text" id="input-val-tech-reg" placeholder="Ex: CFT-SP 12345">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-val-date">Data de Emissão *</label>
+                        <input type="date" id="input-val-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-val-approver">Aprovação Final (Responsável pelo Cliente)</label>
+                        <input type="text" id="input-val-approver" placeholder="Nome do responsável do Hospital/Clínica">
+                    </div>
+
+                    <!-- Canva para Assinatura -->
+                    <div class="form-group full-width">
+                        <label>Assinatura Digital do Técnico / Auditor</label>
+                        <div class="signature-canvas-container">
+                            <canvas id="signature-pad" width="450" height="150"></canvas>
+                            <div class="signature-actions">
+                                <button type="button" id="btn-clear-signature" class="btn btn-secondary btn-small">Limpar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions-bottom">
+                    <button type="button" id="btn-save-report" class="btn btn-primary full-width">
+                        Salvar Relatório no Histórico
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRE-VISUALIZACAO DO RELATORIO (A4) -->
+        <section class="preview-panel">
+            <div class="preview-toolbar no-print">
+                <span>Visualização A4 (Tempo Real)</span>
+                <div class="toolbar-actions">
+                    <span id="save-status" class="status-indicator">Alterações salvas</span>
+                </div>
+            </div>
+            
+            <div id="report-sheet-wrapper" class="report-sheet-wrapper">
+                <!-- A FOLHA DO RELATÓRIO A4 -->
+                <div class="report-sheet" id="report-preview-sheet">
+                    <!-- CABEÇALHO DA INSTITUIÇÃO -->
+                    <div class="report-header-layout">
+                        <div class="report-logo-placeholder" id="preview-logo-container">
+                            <!-- Logo padrão médica -->
+                            <svg class="preview-logo-default" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                            <img id="preview-logo-img" class="hidden" src="" alt="Logo Customizado">
+                        </div>
+                        <div class="report-header-titles">
+                            <h2 class="report-org-name" id="preview-org-name">CliniReport Engenharia Clínica</h2>
+                            <h1 class="report-doc-title">RELATÓRIO DE INTERVENÇÃO TÉCNICA</h1>
+                            <div class="report-doc-id" id="preview-doc-id">REF-2026-XXXX</div>
+                        </div>
+                    </div>
+
+                    <!-- DADOS DE IDENTIFICAÇÃO E ATIVO EM GRIDS -->
+                    <div class="report-grid-section">
+                        <!-- Coluna Cliente -->
+                        <div class="report-grid-card">
+                            <h3 class="card-section-title">1. Dados do Cliente</h3>
+                            <div class="card-details">
+                                <p><strong>Nome/Razão Social:</strong> <span id="preview-client-name" class="empty-field">[Não Informado]</span></p>
+                                <p><strong>Local/Setor:</strong> <span id="preview-client-sector" class="empty-field">[Não Informado]</span></p>
+                                <p><strong>CNPJ:</strong> <span id="preview-client-cnpj" class="empty-field">[Não Informado]</span></p>
+                            </div>
+                        </div>
+                        <!-- Coluna Ativo -->
+                        <div class="report-grid-card">
+                            <h3 class="card-section-title">2. Identificação do Ativo</h3>
+                            <div class="card-details">
+                                <p><strong>Equipamento:</strong> <span id="preview-asset-name" class="empty-field">[Não Informado]</span></p>
+                                <p><strong>Fabricante/Marca:</strong> <span id="preview-asset-brand" class="empty-field">[Não Informado]</span></p>
+                                <p><strong>Modelo Técnico:</strong> <span id="preview-asset-model" class="empty-field">[Não Informado]</span></p>
+                                <p><strong>Nº de Série (S/N):</strong> <span id="preview-asset-serial" class="empty-field">[Não Informado]</span></p>
+                                <p><strong>Patrimônio:</strong> <span id="preview-asset-patrimony" class="empty-field">[Não Informado]</span></p>
+                                <p><strong>Coordenadas GPS:</strong> <span id="preview-asset-gps" class="empty-field">[Não Informado]</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ANÁLISE TÉCNICA -->
+                    <div class="report-block-section">
+                        <h3 class="section-title-line">3. Análise Técnica e Ocorrência</h3>
+                        <div class="report-block-content">
+                            <p><strong>Assunto / Motivo:</strong> <span id="preview-analysis-subject" class="empty-field">[Não Informado]</span></p>
+                            
+                            <div class="report-text-field">
+                                <strong>Ocorrência/Defeito Informado:</strong>
+                                <div id="preview-analysis-occurrence" class="text-field-content empty-field">[Aguardando preenchimento...]</div>
+                            </div>
+                            
+                            <div class="report-text-field">
+                                <strong>Diagnóstico Técnico:</strong>
+                                <div id="preview-analysis-diagnosis" class="text-field-content empty-field">[Aguardando preenchimento...]</div>
+                            </div>
+
+                            <div class="report-text-field">
+                                <strong>Procedimentos Realizados:</strong>
+                                <div id="preview-analysis-procedures" class="text-field-content empty-field">[Aguardando preenchimento...]</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RESULTADOS E CONTROLE METROLÓGICO -->
+                    <div class="report-block-section page-break-before">
+                        <h3 class="section-title-line">4. Resultados e Controle Metrológico</h3>
+                        <div class="report-block-content">
+                            <table class="report-table" id="preview-table-tests">
+                                <thead>
+                                    <tr>
+                                        <th>Inspeção Realizada</th>
+                                        <th style="width: 120px;">Status</th>
+                                        <th>Responsável</th>
+                                        <th style="width: 120px;">Data Ensaio</th>
+                                        <th style="width: 120px;">Validade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="empty-table-row">
+                                        <td colspan="5" style="text-align: center; color: #94a3b8; font-style: italic;">
+                                            Nenhum ensaio adicionado.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="report-grid-env">
+                                <div><strong>Condições Ambientais/Técnicas:</strong></div>
+                                <div class="report-env-items">
+                                    <span><strong>Temp.:</strong> <span id="preview-env-temp">-</span> °C</span>
+                                    <span><strong>Umidade:</strong> <span id="preview-env-humidity">-</span> %</span>
+                                    <span><strong>Pressão:</strong> <span id="preview-env-pressure">-</span> hPa</span>
+                                    <span><strong>Tensão:</strong> <span id="preview-env-tension">-</span> V</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EVIDÊNCIAS FOTOGRÁFICAS -->
+                    <div class="report-block-section" id="preview-photos-section">
+                        <h3 class="section-title-line">5. Evidências Fotográficas</h3>
+                        <div class="report-block-content">
+                            <div id="preview-photos-gallery" class="report-gallery-grid">
+                                <!-- Fotos inseridas dinamicamente -->
+                            </div>
+                            <div id="preview-no-photos-msg" class="empty-gallery-msg">
+                                Nenhuma imagem anexada ao relatório.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONCLUSÃO E RECOMENDAÇÕES -->
+                    <div class="report-block-section page-break-before">
+                        <h3 class="section-title-line">6. Conclusão e Recomendações</h3>
+                        <div class="report-block-content">
+                            <div class="report-text-field">
+                                <strong>Parecer Técnico:</strong>
+                                <div id="preview-val-conclusion" class="text-field-content empty-field">[Aguardando parecer final...]</div>
+                            </div>
+                            
+                            <div class="report-text-field">
+                                <strong>Recomendações:</strong>
+                                <div id="preview-val-recommendations" class="text-field-content empty-field">[Aguardando recomendações...]</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VALIDAÇÃO E ASSINATURA -->
+                    <div class="report-block-section">
+                        <h3 class="section-title-line">7. Validação</h3>
+                        <div class="report-block-content">
+                            <div class="report-validation-grid">
+                                <!-- Coluna Técnico -->
+                                <div class="validation-col text-center">
+                                    <div class="signature-line-container">
+                                        <div class="signature-image-wrapper">
+                                            <img id="preview-signature-img" class="hidden" src="" alt="Assinatura">
+                                            <div id="preview-signature-placeholder" class="signature-placeholder-text">Desenhe sua assinatura no formulário</div>
+                                        </div>
+                                        <div class="signature-line"></div>
+                                    </div>
+                                    <p class="validation-label"><strong>Assinatura do Técnico/Auditor</strong></p>
+                                    <p class="validation-value" id="preview-val-tech-name">Nome do Técnico</p>
+                                    <p class="validation-subvalue" id="preview-val-tech-reg">Registro Profissional</p>
+                                </div>
+                                <!-- Coluna Aprovação e Datas -->
+                                <div class="validation-col">
+                                    <p><strong>Data de Emissão:</strong> <span id="preview-val-date">[Não Informado]</span></p>
+                                    <p style="margin-top: 15px;"><strong>Aprovação Final (Hospital/Clínica):</strong></p>
+                                    <div class="signature-line-container approver-line">
+                                        <div class="signature-line"></div>
+                                    </div>
+                                    <p class="validation-value text-center" id="preview-val-approver">[Nome do Responsável]</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RODAPÉ DA PÁGINA (PRINT APENAS) -->
+                    <footer class="report-footer">
+                        <span>Relatório Técnico de Engenharia Clínica — Rastreabilidade Metrológica</span>
+                        <span class="page-number">Página 1 de 1</span>
+                    </footer>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- HISTORICO MODAL -->
+    <div id="history-modal" class="modal no-print">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Histórico de Relatórios Salvos</h2>
+                <button type="button" class="close-modal-btn" id="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Aqui você encontra os relatórios armazenados localmente neste navegador.</p>
+                <div class="table-wrapper" style="margin-top: 15px;">
+                    <table id="table-history-list">
+                        <thead>
+                            <tr>
+                                <th>ID do Documento</th>
+                                <th>Equipamento</th>
+                                <th>Cliente</th>
+                                <th>Data Emissão</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dinâmico via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

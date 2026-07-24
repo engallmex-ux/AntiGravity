@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Dark Theme Overrides */
+.dark {
+  background-color: #020617 !important; /* Slate 950 */
+  color: #f8fafc !important; /* Slate 50 */
+}
+
+.dark main {
+  background-color: #020617 !important;
+}
+
+.dark .bg-white,
+.dark .bg-slate-50\/50,
+.dark .bg-slate-50 {
+  background-color: #0f172a !important; /* Slate 900 */
+  border-color: #1e293b !important; /* Slate 800 */
+}
+
+.dark .text-slate-800,
+.dark .text-slate-700,
+.dark .text-slate-600 {
+  color: #cbd5e1 !important; /* Slate 300 */
+}
+
+.dark .text-slate-900 {
+  color: #f8fafc !important; /* Slate 50 */
+}
+
+.dark .border-slate-200,
+.dark .border-slate-100,
+.dark .border-slate-200\/80 {
+  border-color: #1e293b !important; /* Slate 800 */
+}
+
+.dark input[type="text"],
+.dark select,
+.dark textarea {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+.dark input[type="text"]::placeholder {
+  color: #64748b !important;
+}
+
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-slate-50\/50:hover,
+.dark .group:hover {
+  background-color: #1e293b !important;
+}
+
+.dark .text-slate-500,
+.dark .text-slate-400 {
+  color: #94a3b8 !important; /* Slate 400 */
+}
+
+.dark table {
+  color: #cbd5e1 !important;
+}
+
+.dark thead tr {
+  background-color: #1e293b !important;
+  border-bottom-color: #334155 !important;
+}
+
+.dark table tbody tr {
+  border-bottom-color: #1e293b !important;
+}
+
+.dark table tbody tr:hover {
+  background-color: #1e293b !important;
+}
+
+.dark .text-slate-950 {
+  color: #020617 !important;
+}
+
+/* ==========================================================================
+   Sobrescritas do Tema Dark Modern (Obsidian Glassmorphism)
+   ========================================================================== */
+.dark_modern {
+  background: radial-gradient(circle at top right, #090d16, #02040a) !important;
+  color: #f1f5f9 !important;
+}
+
+.dark_modern main {
+  background: transparent !important;
+}
+
+/* Painéis e Widgets em Glassmorfismo */
+.dark_modern .bg-white,
+.dark_modern .bg-slate-50\/50,
+.dark_modern .bg-slate-50 {
+  background-color: rgba(13, 20, 38, 0.45) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-color: rgba(99, 102, 241, 0.15) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.03) !important;
+}
+
+.dark_modern .text-slate-800,
+.dark_modern .text-slate-700,
+.dark_modern .text-slate-600 {
+  color: #94a3b8 !important; /* Slate 400 */
+}
+
+.dark_modern .text-slate-900 {
+  color: #f8fafc !important; /* Slate 50 */
+}
+
+.dark_modern .border-slate-200,
+.dark_modern .border-slate-100,
+.dark_modern .border-slate-200\/80 {
+  border-color: rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Caixas de entrada e menus de seleção dropdown */
+.dark_modern input[type="text"],
+.dark_modern select,
+.dark_modern textarea {
+  background-color: rgba(15, 23, 42, 0.75) !important;
+  backdrop-filter: blur(4px) !important;
+  color: #f8fafc !important;
+  border-color: rgba(99, 102, 241, 0.25) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dark_modern input[type="text"]::placeholder {
+  color: #475569 !important;
+}
+
+/* Efeitos de passagem de mouse (hover) */
+.dark_modern .hover\:bg-slate-50:hover,
+.dark_modern .hover\:bg-slate-50\/50:hover,
+.dark_modern .group:hover {
+  background-color: rgba(30, 41, 59, 0.35) !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+.dark_modern .text-slate-500,
+.dark_modern .text-slate-400 {
+  color: #94a3b8 !important; /* Slate 400 */
+}
+
+/* Estilo de tabelas */
+.dark_modern table {
+  color: #cbd5e1 !important;
+}
+
+.dark_modern thead tr {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+  border-bottom-color: rgba(99, 102, 241, 0.25) !important;
+}
+
+.dark_modern table tbody tr {
+  border-bottom-color: rgba(30, 41, 59, 0.3) !important;
+}
+
+.dark_modern table tbody tr:hover {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+}
+
+.dark_modern .text-slate-950 {
+  color: #02040a !important;
+}
+
+/* Acentos cibernéticos brilhantes para o Modo Moderno */
+.dark_modern .border-emerald-500\/20,
+.dark_modern .border-emerald-100 {
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+.dark_modern .bg-emerald-950\/50 {
+  background-color: rgba(6, 78, 59, 0.2) !important;
+}
+
+.dark_modern .bg-emerald-50 {
+  background-color: rgba(6, 78, 59, 0.15) !important;
+  color: #34d399 !important;
+  border-color: rgba(52, 211, 153, 0.2) !important;
+}
+
+.dark_modern .text-emerald-800 {
+  color: #34d399 !important;
+}
+
+/* ==========================================================================
+   Sobrescritas de Layout para o Viewport do Simulador Mobile
+   ========================================================================== */
+.mobile-simulator-viewport {
+  scrollbar-width: none; /* Firefox */
+}
+
+.mobile-simulator-viewport::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.mobile-simulator-viewport .grid-cols-12 {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+.mobile-simulator-viewport .lg\:col-span-5,
+.mobile-simulator-viewport .lg\:col-span-7,
+.mobile-simulator-viewport .lg\:col-span-12 {
+  grid-column: span 1 / span 1 !important;
+}
+
+.mobile-simulator-viewport .flex-row {
+  flex-direction: column !important;
+}
+
+.mobile-simulator-viewport .hidden.xs\:flex {
+  display: none !important;
+}
+
+.mobile-simulator-viewport .sm\:p-6,
+.mobile-simulator-viewport .p-5,
+.mobile-simulator-viewport .p-6 {
+  padding: 1rem !important;
+}
+
+
+

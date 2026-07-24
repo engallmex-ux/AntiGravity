@@ -1,0 +1,47 @@
+[
+    {
+        "id": "OS-2026-3129",
+        "local": "Emergência",
+        "equipamento": "Eletrocardiógrafo",
+        "problema": "Ruído excessivo no traçado",
+        "data_hora": "05/07/2026 20:35",
+        "urgencia": "ALTA",
+        "status": "Pendente"
+    },
+    {
+        "id": "OS-2026-4519",
+        "local": "Almoxarifado",
+        "equipamento": "Eletrocardiógrafo",
+        "problema": "Ruído excessivo no traçado",
+        "data_hora": "05/07/2026 20:35",
+        "urgencia": "ALTA",
+        "status": "Pendente"
+    },
+    {
+        "id": "OS-2026-1042",
+        "local": "U.T.I. Adulto - Leito 08",
+        "equipamento": "Monitor Multiparamétrico",
+        "problema": "Tela piscando e perda de comunicação com a central",
+        "data_hora": "05/07/2026 19:10",
+        "urgencia": "ALTA",
+        "status": "Pendente"
+    },
+    {
+        "id": "OS-2026-1043",
+        "local": "Pronto Socorro - Triagem",
+        "equipamento": "Esfigmomanômetro Digital",
+        "problema": "Erro de calibração na braçadeira",
+        "data_hora": "05/07/2026 19:25",
+        "urgencia": "BAIXA",
+        "status": "Em Andamento"
+    },
+    {
+        "id": "OS-2026-1044",
+        "local": "Centro Cirúrgico - Sala 3",
+        "equipamento": "Bisturi Elétrico",
+        "problema": "Cabo de placa dispersiva rompido",
+        "data_hora": "05/07/2026 19:38",
+        "urgencia": "ALTA",
+        "status": "Pendente"
+    }
+]

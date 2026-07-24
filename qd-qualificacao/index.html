@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QualiTech QD - Automação de Qualificação de Desempenho</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div class="brand-name">
+                    <h1>QualiTech</h1>
+                    <span>QD Automation MVP</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-tab="cadastro">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    <span>Cadastrar Ativo</span>
+                </button>
+                <button class="nav-item" data-tab="ensaios">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Executar Ensaios</span>
+                </button>
+                <button class="nav-item" data-tab="ocr-sim">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                    <span>Simulador de OCR</span>
+                </button>
+                <button class="nav-item" data-tab="relatorios">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    <span>Relatórios</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">AN</div>
+                    <div class="info">
+                        <p class="name">Analista de QD</p>
+                        <p class="role">Operador de Testes</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <div class="header-title">
+                    <h2 id="page-title">Dashboard Geral</h2>
+                    <p id="page-subtitle">Acompanhamento de conformidade e testes térmicos</p>
+                </div>
+                <div class="header-actions">
+                    <span class="status-indicator online">Sistema Operacional</span>
+                </div>
+            </header>
+
+            <!-- Tabs Container -->
+            <div class="tab-content-wrapper">
+                
+                <!-- Tab: Dashboard -->
+                <section id="tab-dashboard" class="tab-pane active">
+                    <!-- Stats Cards Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon primary">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
+                                    <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+                                    <line x1="6" y1="6" x2="6.01" y2="6"/>
+                                    <line x1="6" y1="18" x2="6.01" y2="18"/>
+                                </svg>
+                            </div>
+                            <div class="stat-data">
+                                <span class="stat-value" id="stat-total-ativos">0</span>
+                                <span class="stat-label">Equipamentos Cadastrados</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                            </div>
+                            <div class="stat-data">
+                                <span class="stat-value" id="stat-conformes">0%</span>
+                                <span class="stat-label">Taxa de Conformidade Geral</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon warning">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                            <div class="stat-data">
+                                <span class="stat-value" id="stat-testes-pendentes">0</span>
+                                <span class="stat-label">Ensaios Pendentes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Charts & Recent Activity -->
+                    <div class="dashboard-layout">
+                        <!-- Chart Card -->
+                        <div class="dashboard-card main-chart-card">
+                            <div class="card-header">
+                                <h3>Métricas de Ensaios QD</h3>
+                                <p>Tempo médio de resposta do alarme e recuperação por equipamento</p>
+                            </div>
+                            <div class="card-body chart-container-wrapper">
+                                <canvas id="dashboardOverviewChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Asset List Card -->
+                        <div class="dashboard-card list-card">
+                            <div class="card-header">
+                                <h3>Status dos Equipamentos</h3>
+                                <p>Visão rápida dos ativos cadastrados e sua conformidade</p>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="data-table" id="dashboard-assets-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Identificação</th>
+                                            <th>Modelo</th>
+                                            <th>Queda de Energia</th>
+                                            <th>Porta Aberta</th>
+                                            <th>Recuperação</th>
+                                            <th>Status Geral</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Will be filled by Javascript -->
+                                        <tr class="empty-row">
+                                            <td colspan="6">Nenhum equipamento cadastrado. Comece adicionando um ativo na aba "Cadastrar Ativo".</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: Cadastro de Ativos -->
+                <section id="tab-cadastro" class="tab-pane">
+                    <div class="dashboard-card form-card">
+                        <div class="card-header">
+                            <h3>Registrar Novo Ativo</h3>
+                            <p>Insira as informações técnicas obrigatórias para criar a base histórica e de conformidade.</p>
+                        </div>
+                        <div class="card-body">
+                            <form id="form-cadastro-ativo" class="grid-form">
+                                <div class="form-group col-6">
+                                    <label for="asset-id">Identificação do Ativo / TAG*</label>
+                                    <input type="text" id="asset-id" placeholder="Ex: ULT-01, FREEZER-MED-05" required>
+                                    <span class="help-text">Código único de identificação interna do equipamento.</span>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="asset-model">Modelo do Equipamento*</label>
+                                    <input type="text" id="asset-model" placeholder="Ex: Thermo TSX800, Indrel RV200" required>
+                                    <span class="help-text">Campo obrigatório para referência de performance esperada.</span>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="asset-serial">Número de Série</label>
+                                    <input type="text" id="asset-serial" placeholder="Ex: SN-987654321">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="asset-setpoint">Temperatura de Setpoint (°C)*</label>
+                                    <input type="number" id="asset-setpoint" step="0.1" value="-20.0" required>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label for="asset-load">Condições de Carga & Simulação*</label>
+                                    <textarea id="asset-load" rows="3" required>Simulação de carga térmica via garrafas de 2L (preenchidas com solução glicolada/água) distribuídas nas prateleiras.</textarea>
+                                    <span class="help-text">Descreva a configuração física da simulação de carga para o ensaio.</span>
+                                </div>
+                                <div class="form-group col-12 action-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                            <polyline points="17 21 17 13 7 13 7 21"/>
+                                            <polyline points="7 3 7 8 15 8"/>
+                                        </svg>
+                                        Cadastrar Equipamento
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: Executar Ensaios -->
+                <section id="tab-ensaios" class="tab-pane">
+                    <!-- Selector of Active Asset -->
+                    <div class="asset-selector-bar dashboard-card">
+                        <label for="select-test-asset">Selecione o Equipamento para Qualificação:</label>
+                        <select id="select-test-asset" class="form-control">
+                            <option value="">-- Escolha um equipamento cadastrado --</option>
+                        </select>
+                    </div>
+
+                    <!-- Test Workflow (hidden until asset is selected) -->
+                    <div id="test-workflow-container" class="disabled-overlay">
+                        <div class="overlay-msg">Selecione um equipamento acima para iniciar a qualificação.</div>
+                        
+                        <div class="workflow-tabs">
+                            <button class="w-tab active" data-wtab="test-energia">A. Estudo de Queda de Energia</button>
+                            <button class="w-tab" data-wtab="test-porta">B. Estudo de Porta Aberta</button>
+                            <button class="w-tab" data-wtab="test-retomada">C. Retomada de Temperatura</button>
+                        </div>
+
+                        <!-- Workflow Tab: Queda de Energia -->
+                        <div id="wtab-test-energia" class="w-tab-content active">
+                            <div class="test-instruction">
+                                <h4>Procedimento: Queda de Energia (Autonomia e Integridade)</h4>
+                                <p>Desconecte o equipamento da rede elétrica por exatamente <strong>10 minutos</strong>. Monitore o display e registre a integridade da memória após o religamento.</p>
+                            </div>
+
+                            <div class="grid-layout-2">
+                                <!-- Inputs card -->
+                                <div class="dashboard-card">
+                                    <div class="card-header">
+                                        <h3>Horários e Controle do Evento</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label>Início da Queda (Horário de Desligamento)</label>
+                                            <div class="input-action-group">
+                                                <input type="text" id="power-off-time" placeholder="HH:MM:SS" value="15:29:38">
+                                                <button class="btn btn-secondary btn-small btn-capture" data-target="power-off-time">Agora</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Fim da Queda (Horário de Religamento)</label>
+                                            <div class="input-action-group">
+                                                <input type="text" id="power-on-time" placeholder="HH:MM:SS" value="15:40:06">
+                                                <button class="btn btn-secondary btn-small btn-capture" data-target="power-on-time">Agora</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <button class="btn btn-primary btn-block" id="btn-save-outage">
+                                            Salvar Horários da Queda
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Checklist Card -->
+                                <div class="dashboard-card">
+                                    <div class="card-header">
+                                        <h3>Checklist Obrigatório Pós-Evento</h3>
+                                        <p>Confirme a integridade da bateria e registros pós-religamento</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="form-checklist-energia" class="checklist-form">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="chk-display-on" required>
+                                                <div class="checkbox-text">
+                                                    <strong>Autonomia da Bateria:</strong> O display se manteve aceso e indicando temperatura durante os 10 minutos de queda?
+                                                </div>
+                                            </label>
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="chk-logs-saved" required>
+                                                <div class="checkbox-text">
+                                                    <strong>Registro Contínuo:</strong> Houve a manutenção do registro interno de dados durante a interrupção da rede?
+                                                </div>
+                                            </label>
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="chk-setpoint-saved" required>
+                                                <div class="checkbox-text">
+                                                    <strong>Validação de Memória:</strong> O setpoint (-20,0°C) e os logs anteriores não foram perdidos/resetados após o religamento?
+                                                </div>
+                                            </label>
+                                            <button type="submit" class="btn btn-success btn-block" id="btn-confirm-checklist">
+                                                Confirmar Checklist & Salvar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Workflow Tab: Porta Aberta -->
+                        <div id="wtab-test-porta" class="w-tab-content">
+                            <div class="test-instruction">
+                                <h4>Procedimento: Abertura de Porta (Alarme e Sensibilidade)</h4>
+                                <p>Abra a porta do equipamento por <strong>10 minutos</strong>. Monitore o tempo decorrido entre a abertura da porta (t=0) e o acionamento do alarme visual ou sonoro.</p>
+                            </div>
+
+                            <div class="grid-layout-2">
+                                <!-- Stopwatch and logs -->
+                                <div class="dashboard-card">
+                                    <div class="card-header">
+                                        <h3>Registro e Cronometragem do Alarme</h3>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <div class="stopwatch-display" id="stopwatch-time">00:00.00</div>
+                                        
+                                        <div class="stopwatch-controls">
+                                            <button class="btn btn-primary" id="btn-sw-start">Abrir Porta (t=0)</button>
+                                            <button class="btn btn-warning" id="btn-sw-alarm" disabled>Disparo de Alarme 🔔</button>
+                                            <button class="btn btn-danger" id="btn-sw-stop" disabled>Fechar Porta</button>
+                                        </div>
+
+                                        <div class="stopwatch-status-label" id="sw-status">Parado</div>
+                                    </div>
+                                </div>
+
+                                <!-- Manual parameters inputs -->
+                                <div class="dashboard-card">
+                                    <div class="card-header">
+                                        <h3>Dados Registrados do Ensaio</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label>Início da Abertura (Horário)</label>
+                                            <input type="text" id="door-open-time" placeholder="HH:MM:SS" value="15:41:38">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Fim da Abertura / Fechamento (Horário)</label>
+                                            <input type="text" id="door-close-time" placeholder="HH:MM:SS" value="15:51:38">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tempo de Reação do Alarme (segundos)</label>
+                                            <input type="number" id="door-alarm-delay" placeholder="Ex: 45" value="45">
+                                            <span class="help-text">Tempo transcorrido da abertura até o alarme disparar.</span>
+                                        </div>
+                                        <button class="btn btn-primary btn-block" id="btn-save-door-test">
+                                            Salvar Dados de Porta Aberta
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Workflow Tab: Retomada de Temperatura -->
+                        <div id="wtab-test-retomada" class="w-tab-content">
+                            <div class="test-instruction">
+                                <h4>Procedimento: Retomada de Temperatura (Recuperação)</h4>
+                                <p>Após o fechamento da porta, monitore o tempo necessário para o equipamento retornar e estabilizar no seu setpoint operacional (-20,0 °C).</p>
+                            </div>
+
+                            <div class="grid-layout-2">
+                                <!-- Recovery Parameters -->
+                                <div class="dashboard-card">
+                                    <div class="card-header">
+                                        <h3>Estabilização Térmica</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label>Início da Recuperação (Horário)</label>
+                                            <input type="text" id="recovery-start-time" placeholder="HH:MM:SS" value="15:53:24">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Temperatura no Início da Recuperação (°C)</label>
+                                            <input type="number" id="recovery-start-temp" step="0.1" value="1.0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Estabilização / Retorno ao Setpoint (Horário)</label>
+                                            <input type="text" id="recovery-end-time" placeholder="HH:MM:SS" value="16:59:48">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Temperatura na Estabilização (°C)</label>
+                                            <input type="number" id="recovery-end-temp" step="0.1" value="-20.1">
+                                        </div>
+                                        
+                                        <div class="time-calculation-block">
+                                            <span>Tempo Total Calculado:</span>
+                                            <strong id="recovery-duration-calc">--</strong>
+                                        </div>
+
+                                        <button class="btn btn-primary btn-block" id="btn-save-recovery-test">
+                                            Salvar Recuperação & Atualizar Gráficos
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Live Graph for recovery curve preview -->
+                                <div class="dashboard-card">
+                                    <div class="card-header">
+                                        <h3>Visualização Curva de Retomada</h3>
+                                        <p>Gráfico interativo gerado com base no início e estabilização</p>
+                                    </div>
+                                    <div class="card-body chart-container-wrapper">
+                                        <canvas id="recoveryTestChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Tab: Simulador de OCR -->
+                <section id="tab-ocr-sim" class="tab-pane">
+                    <div class="ocr-container">
+                        <!-- Panel control and Display simulator -->
+                        <div class="dashboard-card ocr-panel-card">
+                            <div class="card-header">
+                                <h3>Painel Físico do Equipamento (Simulado)</h3>
+                                <p>Configure os valores do display digital para testar o scanner OCR.</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="panel-controllers">
+                                    <div class="form-group">
+                                        <label for="sim-temp">Temperatura do Display (°C)</label>
+                                        <input type="number" id="sim-temp" step="0.1" value="-20.0" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sim-comp">Compressores (Status)</label>
+                                        <select id="sim-comp" class="form-control">
+                                            <option value="Ligado/Ativo">Ligado / Ativo</option>
+                                            <option value="Desligado/Standby">Desligado / Standby</option>
+                                            <option value="Alerta/Falha">Alerta / Falha</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sim-date">Data Simulada</label>
+                                        <input type="date" id="sim-date" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sim-time">Hora Simulada</label>
+                                        <input type="time" id="sim-time" step="1" class="form-control">
+                                    </div>
+                                </div>
+
+                                <!-- Visual freezer panel box -->
+                                <div class="freezer-display-panel" id="freezer-display-panel">
+                                    <div class="panel-screen">
+                                        <div class="panel-row-top">
+                                            <span class="panel-indicator blinking">● REC</span>
+                                            <span class="panel-datetime" id="panel-disp-datetime">05/07/2026 18:42:00</span>
+                                        </div>
+                                        
+                                        <div class="panel-main-temp">
+                                            <span class="temp-val" id="panel-disp-temp">-20.0</span>
+                                            <span class="temp-unit">°C</span>
+                                        </div>
+                                        
+                                        <div class="panel-row-bottom">
+                                            <div class="panel-status-led">
+                                                <span class="led green" id="led-compressor"></span>
+                                                <span class="led-label">COMPRESSOR: <strong id="panel-disp-comp">LIGADO</strong></span>
+                                            </div>
+                                            <div class="panel-status-led">
+                                                <span class="led green" id="led-battery"></span>
+                                                <span class="led-label">BAT: 100%</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Scanning laser element -->
+                                        <div class="scanner-laser" id="scanner-laser"></div>
+                                    </div>
+                                    <div class="panel-bezel">
+                                        <span>QUALI-TEMP PRO</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OCR Scanned Results -->
+                        <div class="dashboard-card ocr-results-card">
+                            <div class="card-header">
+                                <h3>Câmera & Captura OCR de Painel</h3>
+                                <p>Acione o escaneamento para ler e extrair os dados térmicos por visão computacional.</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="action-buttons-ocr">
+                                    <button class="btn btn-primary btn-block btn-large" id="btn-trigger-ocr">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                            <circle cx="12" cy="13" r="4"/>
+                                        </svg>
+                                        Escanear Foto do Painel
+                                    </button>
+                                </div>
+
+                                <div class="ocr-status-box" id="ocr-status-box">
+                                    Pronto para captura. Pressione o botão acima.
+                                </div>
+
+                                <div class="ocr-fields">
+                                    <div class="ocr-field-row">
+                                        <span class="field-name">Data Identificada:</span>
+                                        <input type="text" id="ocr-result-date" readonly class="ocr-result-input">
+                                    </div>
+                                    <div class="ocr-field-row">
+                                        <span class="field-name">Hora Identificada:</span>
+                                        <input type="text" id="ocr-result-time" readonly class="ocr-result-input">
+                                    </div>
+                                    <div class="ocr-field-row">
+                                        <span class="field-name">Temperatura Lido:</span>
+                                        <input type="text" id="ocr-result-temp" readonly class="ocr-result-input">
+                                    </div>
+                                    <div class="ocr-field-row">
+                                        <span class="field-name">Compressor Status:</span>
+                                        <input type="text" id="ocr-result-comp" readonly class="ocr-result-input">
+                                    </div>
+                                </div>
+
+                                <div class="ocr-log-actions">
+                                    <label for="select-ocr-asset">Vincular estes dados ao ativo:</label>
+                                    <select id="select-ocr-asset" class="form-control mb-10">
+                                        <option value="">-- Selecione o equipamento --</option>
+                                    </select>
+                                    
+                                    <div class="ocr-bind-target-selection">
+                                        <label>Selecione em qual ensaio salvar o registro:</label>
+                                        <div class="radio-group">
+                                            <label><input type="radio" name="ocr-target-test" value="outage-start" checked> Início da Queda</label>
+                                            <label><input type="radio" name="ocr-target-test" value="outage-end"> Fim da Queda</label>
+                                            <label><input type="radio" name="ocr-target-test" value="door-open"> Início Porta Aberta</label>
+                                            <label><input type="radio" name="ocr-target-test" value="door-close"> Fechamento Porta</label>
+                                            <label><input type="radio" name="ocr-target-test" value="recovery-start"> Início da Retomada</label>
+                                            <label><input type="radio" name="ocr-target-test" value="recovery-end"> Estabilização</label>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-success btn-block mt-10" id="btn-save-ocr-to-test" disabled>
+                                        Vincular Registro ao Ensaio
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: Relatórios -->
+                <section id="tab-relatorios" class="tab-pane">
+                    <div class="report-selection-bar dashboard-card">
+                        <label for="select-report-asset">Selecione o Ativo para Gerar Relatório:</label>
+                        <div class="flex-row">
+                            <select id="select-report-asset" class="form-control">
+                                <option value="">-- Selecione o equipamento --</option>
+                            </select>
+                            <button class="btn btn-primary" id="btn-print-report" disabled>Imprimir / Salvar PDF 🖨️</button>
+                        </div>
+                    </div>
+
+                    <!-- Report Sheet (Hidden/Empty default) -->
+                    <div id="report-sheet-container" class="report-sheet-container disabled-overlay">
+                        <div class="overlay-msg">Selecione um ativo acima para gerar a folha de especificações e conformidade.</div>
+                        
+                        <!-- Printable Document -->
+                        <div class="report-document" id="report-document">
+                            <div class="report-print-header">
+                                <div class="report-logo">
+                                    <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    </svg>
+                                    <div>
+                                        <h2>QualiTech QD</h2>
+                                        <span>Serviços de Calibração e Qualificação</span>
+                                    </div>
+                                </div>
+                                <div class="report-meta">
+                                    <p><strong>Relatório Nº:</strong> <span id="rep-num">QD-2026-0001</span></p>
+                                    <p><strong>Data de Emissão:</strong> <span id="rep-date">05/07/2026</span></p>
+                                </div>
+                            </div>
+
+                            <div class="report-title-section">
+                                <h1>RELATÓRIO TÉCNICO DE QUALIFICAÇÃO DE DESEMPENHO (QD)</h1>
+                                <p>Avaliação térmica e de integridade funcional em regime de carga simulada</p>
+                            </div>
+
+                            <!-- 1. IDENTIFICAÇÃO DO ATIVO -->
+                            <section class="report-sec">
+                                <h3>1. Identificação do Ativo</h3>
+                                <table class="report-table-info">
+                                    <tr>
+                                        <td><strong>Ativo / TAG:</strong></td>
+                                        <td id="rep-tag">--</td>
+                                        <td><strong>Modelo do Equipamento:</strong></td>
+                                        <td id="rep-model">--</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Número de Série:</strong></td>
+                                        <td id="rep-serial">--</td>
+                                        <td><strong>Temperatura de Setpoint:</strong></td>
+                                        <td id="rep-setpoint">-- °C</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Condições de Carga:</strong></td>
+                                        <td colspan="3" id="rep-load">--</td>
+                                    </tr>
+                                </table>
+                            </section>
+
+                            <!-- 2. RESUMO DE CONFORMIDADE -->
+                            <section class="report-sec">
+                                <h3>2. Resumo de Conformidade</h3>
+                                <div class="compliance-badge-row">
+                                    <div class="compliance-badge" id="rep-general-badge">PENDENTE</div>
+                                    <div class="compliance-metrics">
+                                        <p><strong>Estudo Queda de Energia:</strong> <span id="rep-status-energy">Não realizado</span></p>
+                                        <p><strong>Estudo Porta Aberta:</strong> <span id="rep-status-door">Não realizado</span></p>
+                                        <p><strong>Estudo Retomada Térmica:</strong> <span id="rep-status-recovery">Não realizado</span></p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- 3. DETALHAMENTO DOS ENSAIOS -->
+                            <section class="report-sec">
+                                <h3>3. Detalhamento dos Ensaios Executados</h3>
+
+                                <!-- Ensaio A -->
+                                <div class="test-item-report">
+                                    <h4>A. Estudo de Queda de Energia (Autonomia e Integridade de 10 min)</h4>
+                                    <table class="report-data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Início da Queda</th>
+                                                <th>Fim da Queda</th>
+                                                <th>Duração Efetiva</th>
+                                                <th>Autonomia Bateria</th>
+                                                <th>Histórico Mantido</th>
+                                                <th>Memória do Setpoint</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="rep-energy-start">--</td>
+                                                <td id="rep-energy-end">--</td>
+                                                <td id="rep-energy-duration">10 minutos</td>
+                                                <td id="rep-energy-battery">--</td>
+                                                <td id="rep-energy-logs">--</td>
+                                                <td id="rep-energy-setpoint">--</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Ensaio B -->
+                                <div class="test-item-report">
+                                    <h4>B. Estudo de Porta Aberta (Alarme e Sensibilidade)</h4>
+                                    <table class="report-data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Abertura Porta</th>
+                                                <th>Fechamento Porta</th>
+                                                <th>Tempo de Abertura</th>
+                                                <th>Disparo do Alarme</th>
+                                                <th>Status Sensibilidade</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="rep-door-start">--</td>
+                                                <td id="rep-door-end">--</td>
+                                                <td id="rep-door-duration">10 minutos</td>
+                                                <td id="rep-door-alarm">--</td>
+                                                <td id="rep-door-result">--</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Ensaio C -->
+                                <div class="test-item-report">
+                                    <h4>C. Estudo de Retomada de Temperatura (Recuperação)</h4>
+                                    <table class="report-data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Início da Retomada</th>
+                                                <th>Temperatura Inicial</th>
+                                                <th>Estabilização</th>
+                                                <th>Temperatura Final</th>
+                                                <th>Tempo de Retomada</th>
+                                                <th>Status Retomada</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="rep-rec-start">--</td>
+                                                <td id="rep-rec-temp-start">--</td>
+                                                <td id="rep-rec-end">--</td>
+                                                <td id="rep-rec-temp-end">--</td>
+                                                <td id="rep-rec-duration">--</td>
+                                                <td id="rep-rec-result">--</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+
+                            <!-- 4. GRÁFICOS DE RETOMADA TÉRMICA -->
+                            <section class="report-sec page-break">
+                                <h3>4. Gráfico da Curva de Retomada e Operação do Compressor</h3>
+                                <div class="report-chart-container">
+                                    <canvas id="reportChartImageCanvas"></canvas>
+                                </div>
+                            </section>
+
+                            <!-- 5. CONCLUSÃO E ASSINATURAS -->
+                            <section class="report-sec">
+                                <h3>5. Conclusão</h3>
+                                <p id="rep-conclusion-text">
+                                    Com base nos limites aceitáveis e especificações fornecidas pelo memorial descritivo, o equipamento avaliado encontra-se em estado conforme para operação em ensaios clínicos e conservação térmica de insumos biológicos.
+                                </p>
+                            </section>
+
+                            <div class="report-signature-section">
+                                <div class="sig-block">
+                                    <div class="sig-line"></div>
+                                    <p><strong>Responsável Técnico (QD)</strong></p>
+                                    <p>Departamento de Qualificação</p>
+                                </div>
+                                <div class="sig-block">
+                                    <div class="sig-line"></div>
+                                    <p><strong>Garantia da Qualidade</strong></p>
+                                    <p>Assinatura e Carimbo</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

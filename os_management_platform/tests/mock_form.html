@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Página de Teste de Automação</title>
+</head>
+<body>
+    <h2>Formulário de Abertura de Chamado</h2>
+    <form id="form_test_os" action="/enviar" method="POST">
+        <label for="campo_usuario">Nome do Solicitante:</label>
+        <input type="text" id="campo_usuario" name="usuario" placeholder="Digite seu nome completo" />
+        
+        <label for="campo_prioridade">Prioridade:</label>
+        <select id="campo_prioridade" name="prioridade">
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+        </select>
+        
+        <label for="campo_defeito">Descreva o defeito:</label>
+        <textarea id="campo_defeito" name="defeito" placeholder="O que está acontecendo?"></textarea>
+        
+        <button type="submit" id="btn_enviar">Enviar OS</button>
+    </form>
+</body>
+</html>

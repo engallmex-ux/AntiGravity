@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<title>GETS - Centro de Engenharia Biomédica - Consulta de Pendências</title>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 20px;
+        }
+        .header {
+            background-color: #0b3c5d;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-pending { background-color: #ffeeba; color: #856404; }
+        .badge-progress { background-color: #b8daff; color: #004085; }
+        .badge-done { background-color: #c3e6cb; color: #155724; }
+        .badge-high { background-color: #f8d7da; color: #721c24; }
+        .badge-medium { background-color: #fff3cd; color: #856404; }
+        .badge-low { background-color: #d4edda; color: #155724; }
+        .btn {
+            background-color: #008080;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .btn:hover {
+            background-color: #006666;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+<h1>GETS - Sistema de Gestão de Engenharia Clínica</h1>
+<p>Painel de Consulta de Ordens de Serviço (OS) Pendentes - Hospital das Clínicas</p>
+</div>
+<div class="container">
+<h2>Ordens de Serviço Pendentes no Setor</h2>
+<p>Este é um portal simulado para fins de teste da automação de extração do Antigravity.</p>
+<button class="btn" onclick="adicionarOS()">Simular Entrada de Nova OS (Urgente)</button>
+<table id="osTable">
+<thead>
+<tr>
+<th>Nº OS</th>
+<th>Setor / Local</th>
+<th>Equipamento</th>
+<th>Descrição do Problema</th>
+<th>Data/Hora Abertura</th>
+<th>Urgência</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr><td>OS-2026-3129</td><td>Emergência</td><td>Eletrocardiógrafo</td><td>Ruído excessivo no traçado</td><td>05/07/2026 20:35</td><td><span class="badge badge-high">ALTA</span></td><td><span class="badge badge-pending">Pendente</span></td></tr><tr><td>OS-2026-4519</td><td>Almoxarifado</td><td>Eletrocardiógrafo</td><td>Ruído excessivo no traçado</td><td>05/07/2026 20:35</td><td><span class="badge badge-high">ALTA</span></td><td><span class="badge badge-pending">Pendente</span></td></tr>
+<tr>
+<td>OS-2026-1042</td>
+<td>U.T.I. Adulto - Leito 08</td>
+<td>Monitor Multiparamétrico</td>
+<td>Tela piscando e perda de comunicação com a central</td>
+<td>05/07/2026 19:10</td>
+<td><span class="badge badge-high">ALTA</span></td>
+<td><span class="badge badge-pending">Pendente</span></td>
+</tr>
+<tr>
+<td>OS-2026-1043</td>
+<td>Pronto Socorro - Triagem</td>
+<td>Esfigmomanômetro Digital</td>
+<td>Erro de calibração na braçadeira</td>
+<td>05/07/2026 19:25</td>
+<td><span class="badge badge-low">BAIXA</span></td>
+<td><span class="badge badge-progress">Em Andamento</span></td>
+</tr>
+<tr>
+<td>OS-2026-1044</td>
+<td>Centro Cirúrgico - Sala 3</td>
+<td>Bisturi Elétrico</td>
+<td>Cabo de placa dispersiva rompido</td>
+<td>05/07/2026 19:38</td>
+<td><span class="badge badge-high">ALTA</span></td>
+<td><span class="badge badge-pending">Pendente</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<script>
+    // Função para simular a criação de novas OS dinamicamente no portal legado
+    const setores = ["Pediatria", "Maternidade", "Hemodiálise", "U.T.I. Cardio", "Emergência"];
+    const equipamentos = ["Bomba de Infusão", "Ventilador Pulmonar", "Desfibrilador", "Eletrocardiógrafo", "Oxímetro de Pulso"];
+    const problemas = ["Fluxo obstruído constantemente", "Falha no ciclo inspiratório", "Bateria não segura carga", "Ruído excessivo no traçado", "Sensor com mau contato"];
+    
+    function adicionarOS() {
+        const tableBody = document.querySelector("#osTable tbody");
+        const randomOS = "OS-2026-" + Math.floor(1000 + Math.random() * 9000);
+        const randomSetor = setores[Math.floor(Math.random() * setores.length)];
+        const randomEquip = equipamentos[Math.floor(Math.random() * equipamentos.length)];
+        const randomProb = problemas[Math.floor(Math.random() * problemas.length)];
+        
+        // Formatar data atual
+        const agora = new Date();
+        const dataStr = agora.getDate().toString().padStart(2, '0') + '/' + 
+                        (agora.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+                        agora.getFullYear() + ' ' + 
+                        agora.getHours().toString().padStart(2, '0') + ':' + 
+                        agora.getMinutes().toString().padStart(2, '0');
+                        
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td>${randomOS}</td>
+            <td>${randomSetor}</td>
+            <td>${randomEquip}</td>
+            <td>${randomProb}</td>
+            <td>${dataStr}</td>
+            <td><span class="badge badge-high">ALTA</span></td>
+            <td><span class="badge badge-pending">Pendente</span></td>
+        `;
+        
+        // Insere no topo da tabela para simular nova atividade
+        tableBody.insertBefore(newRow, tableBody.firstChild);
+    }
+</script>
+</body>
+</html>
