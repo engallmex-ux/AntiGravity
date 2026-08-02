@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GETS Robots | Central de Agentes & Mapeador</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/web/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation (Apenas 2 Abas) -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">🤖</div>
+                <div class="brand-text">
+                    <h2>GETS Robots</h2>
+                    <span class="badge">EBSERH / CEB Unicamp</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-tab="tab-agents">
+                    <span class="icon">🤖</span> Central de Agentes
+                </button>
+                <button class="nav-btn" data-tab="tab-mapper">
+                    <span class="icon">🌐</span> Mapeador Cartógrafo
+                </button>
+            </nav>
+
+            <div class="system-status-card">
+                <div class="status-indicator online" id="server-status-dot"></div>
+                <div class="status-info">
+                    <span class="status-label">Modo Operacional</span>
+                    <strong id="server-status-text">Execução 100% Real</strong>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h1 id="page-title">🤖 Central de Controle da Equipe de Agentes</h1>
+                    <p id="page-subtitle">Disparo real dos robôs Playwright de leitura e varredura do portal GETS.</p>
+                </div>
+                <div class="header-actions">
+                    <div class="status-badge" id="robot-running-badge">
+                        <span class="pulse"></span> Robô Inativo
+                    </div>
+                </div>
+            </header>
+
+            <!-- TAB 1: CENTRAL DE AGENTES (ROBÔS 01 AO 08) -->
+            <section class="tab-content active" id="tab-agents">
+                <div class="robots-grid">
+                    <!-- ROBÔ 01 -->
+                    <div class="robot-card">
+                        <div class="robot-card-header">
+                            <span class="robot-badge active">🟢 ROBÔ 01</span>
+                            <span class="robot-type">Extração Real</span>
+                        </div>
+                        <h4>Extração Paginada & Gás Medicinal</h4>
+                        <p>Abre o Chrome real, navega na consulta de pendências e extrai chamados de gás medicinal.</p>
+                        <div class="robot-card-footer">
+                            <span class="r-status">Status: <strong>Funcional & Ativo</strong></span>
+                            <button class="btn-sm btn-action" onclick="runSingleRobot('01')">Executar Robô 01</button>
+                        </div>
+                    </div>
+
+                    <!-- ROBÔ 02 -->
+                    <div class="robot-card">
+                        <div class="robot-card-header">
+                            <span class="robot-badge active">🟢 ROBÔ 02</span>
+                            <span class="robot-type">Ficha Técnica</span>
+                        </div>
+                        <h4>Extrator de Ficha Detalhada</h4>
+                        <p>Extrai o histórico detalhado e informações de cada ordem de serviço.</p>
+                        <div class="robot-card-footer">
+                            <span class="r-status">Status: <strong>Funcional</strong></span>
+                            <button class="btn-sm btn-action" onclick="runSingleRobot('02')">Executar Robô 02</button>
+                        </div>
+                    </div>
+
+                    <!-- ROBÔ 03 -->
+                    <div class="robot-card">
+                        <div class="robot-card-header">
+                            <span class="robot-badge active">🟢 ROBÔ 03</span>
+                            <span class="robot-type">Inventário</span>
+                        </div>
+                        <h4>Inventário Master de Ativos</h4>
+                        <p>Varre a consulta de equipamentos e extrai a lista inteira de ativos do hospital.</p>
+                        <div class="robot-card-footer">
+                            <span class="r-status">Status: <strong>Funcional</strong></span>
+                            <button class="btn-sm btn-action" onclick="runSingleRobot('03')">Executar Robô 03</button>
+                        </div>
+                    </div>
+
+                    <!-- ROBÔ 04 -->
+                    <div class="robot-card">
+                        <div class="robot-card-header">
+                            <span class="robot-badge warning">🟡 ROBÔ 04</span>
+                            <span class="robot-type">Inspeção</span>
+                        </div>
+                        <h4>Inspetor de Técnico & Atendimento</h4>
+                        <p>Consulta atendimentos históricos por técnico responsável no sistema.</p>
+                        <div class="robot-card-footer">
+                            <span class="r-status">Status: <strong>Em Aprimoramento</strong></span>
+                            <button class="btn-sm btn-action" onclick="runSingleRobot('04')">Executar Robô 04</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card glass margin-top">
+                    <h3>📜 Console Unificado de Logs da Equipe de Agentes</h3>
+                    <pre class="log-console" id="agents-log-output">Aguardando disparo do robô...</pre>
+                </div>
+            </section>
+
+            <!-- TAB 2: MAPEADOR CARTÓGRAFO -->
+            <section class="tab-content" id="tab-mapper">
+                <div class="grid-2">
+                    <div class="card glass">
+                        <h3>⚙️ Configuração da Varredura Real</h3>
+                        <form id="form-mapper" class="form-grid">
+                            <div class="form-group full">
+                                <label for="map-url">URL Inicial do GETS</label>
+                                <input type="url" id="map-url" value="https://gets.ceb.unicamp.br/nec/" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="map-user">Usuário / E-mail</label>
+                                <input type="text" id="map-user" value="lucas.fonseca.4@hubrasil.gov.br" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="map-pass">Senha de Acesso</label>
+                                <input type="password" id="map-pass" value="140921" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="map-pages">Limite de Páginas (0 = Ilimitado)</label>
+                                <input type="number" id="map-pages" value="8" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="map-mode">Modo de Varredura</label>
+                                <select id="map-mode">
+                                    <option value="clicking" selected>Cliques Reais (Navegação Dinâmica)</option>
+                                    <option value="static">Estático (Menus e Links)</option>
+                                </select>
+                            </div>
+                            <div class="form-group full toggle-group">
+                                <label class="switch">
+                                    <input type="checkbox" id="map-visible" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                                <span class="toggle-text">Visualizar Navegador Chrome na Tela (Headless = False)</span>
+                            </div>
+
+                            <div class="btn-group-row">
+                                <button type="submit" class="btn btn-primary" id="btn-start-mapper">🚀 Iniciar Mapeamento</button>
+                                <button type="button" class="btn btn-danger" id="btn-stop-mapper">🛑 Parar Mapeamento</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card glass">
+                        <h3>📈 Progresso da Varredura em Tempo Real</h3>
+                        <div class="progress-container">
+                            <div class="progress-header">
+                                <span class="progress-status-text" id="prog-status">Inativo (Aguardando início...)</span>
+                                <span class="progress-percentage" id="prog-percent">0.0%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" id="prog-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-stats-row">
+                                <div class="p-stat">
+                                    <span>Páginas Visitadas</span>
+                                    <strong id="prog-visited">0</strong>
+                                </div>
+                                <div class="p-stat">
+                                    <span>Descobertas</span>
+                                    <strong id="prog-total">0</strong>
+                                </div>
+                                <div class="p-stat">
+                                    <span>Transições</span>
+                                    <strong id="prog-transitions">0</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="log-console-container">
+                            <div class="log-header">
+                                <span>Console de Logs do Robô</span>
+                                <button class="btn-sm" id="btn-clear-logs">Limpar</button>
+                            </div>
+                            <pre class="log-console" id="log-output">Aguardando comandos de leitura...</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/web/app.js"></script>
+</body>
+</html>
